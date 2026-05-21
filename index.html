@@ -694,6 +694,41 @@
       justify-content:center;
     }
     .bottomNav button.active{background:var(--accent);color:var(--on-accent)}
+    .navTooltip{
+      position:fixed;
+      left:0;
+      top:0;
+      z-index:80;
+      border:2px solid var(--line);
+      background:var(--line);
+      color:var(--on-line);
+      box-shadow:var(--shadow-sm);
+      padding:8px 10px;
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      pointer-events:none;
+      opacity:0;
+      transform:translate(-50%, -10px) scale(.96);
+      transition:.12s opacity,.12s transform;
+      white-space:nowrap;
+    }
+    .navTooltip.show{
+      opacity:1;
+      transform:translate(-50%, -18px) scale(1);
+    }
+    .navTooltip::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-8px;
+      width:12px;
+      height:12px;
+      background:var(--line);
+      border-right:2px solid var(--line);
+      border-bottom:2px solid var(--line);
+      transform:translateX(-50%) rotate(45deg);
+    }
     .navIcon{
       width:18px;
       height:18px;
@@ -1375,6 +1410,7 @@
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<div class="navTooltip" id="navTooltip" role="tooltip" aria-hidden="true"></div>
 
 <script>
 let official = {};
@@ -1665,6 +1701,12 @@ let state = {
 };
 
 let trainerAbortController = null;
+let navTooltipTimer = null;
+let navTooltipHideTimer = null;
+let navTooltipButton = null;
+let navTooltipPointerId = null;
+let navTooltipStart = null;
+let suppressNavClick = false;
 
 function $(id){return document.getElementById(id)}
 function uid(){return `${Date.now()}-${Math.random().toString(16).slice(2)}`}
@@ -2577,6 +2619,104 @@ function handleOutsideDrawerClick(event){
   if(shouldCloseDrawerFromOutsideClick(event)) closeDrawer();
 }
 
+function navButtonLabel(button){
+  return button?.getAttribute("aria-label") || button?.textContent?.trim() || "";
+}
+
+function positionNavTooltip(button){
+  const tooltip = $("navTooltip");
+  if(!tooltip || !button) return;
+  const rect = button.getBoundingClientRect();
+  const width = tooltip.offsetWidth || 96;
+  const x = Math.max(10 + width / 2, Math.min(window.innerWidth - 10 - width / 2, rect.left + rect.width / 2));
+  const y = Math.max(12, rect.top);
+  tooltip.style.left = `${Math.round(x)}px`;
+  tooltip.style.top = `${Math.round(y)}px`;
+}
+
+function showNavTooltip(button){
+  const tooltip = $("navTooltip");
+  const label = navButtonLabel(button);
+  if(!tooltip || !label) return;
+  clearTimeout(navTooltipHideTimer);
+  tooltip.textContent = label;
+  tooltip.setAttribute("aria-hidden", "false");
+  tooltip.classList.add("show");
+  positionNavTooltip(button);
+  suppressNavClick = true;
+}
+
+function hideNavTooltip(delay = 0){
+  clearTimeout(navTooltipHideTimer);
+  navTooltipHideTimer = setTimeout(()=>{
+    const tooltip = $("navTooltip");
+    if(!tooltip) return;
+    tooltip.classList.remove("show");
+    tooltip.setAttribute("aria-hidden", "true");
+  }, delay);
+}
+
+function clearNavTooltipPress({hideDelay = 0, keepSuppress = false} = {}){
+  clearTimeout(navTooltipTimer);
+  navTooltipTimer = null;
+  navTooltipButton = null;
+  navTooltipPointerId = null;
+  navTooltipStart = null;
+  if(!keepSuppress) suppressNavClick = false;
+  hideNavTooltip(hideDelay);
+}
+
+function startNavTooltipPress(event){
+  if(event.pointerType === "mouse" && event.button !== 0) return;
+  const button = event.currentTarget;
+  clearNavTooltipPress();
+  navTooltipButton = button;
+  navTooltipPointerId = event.pointerId;
+  navTooltipStart = {x:event.clientX, y:event.clientY};
+  navTooltipTimer = setTimeout(()=>{
+    if(navTooltipButton === button) showNavTooltip(button);
+  }, 560);
+}
+
+function moveNavTooltipPress(event){
+  if(navTooltipPointerId !== event.pointerId || !navTooltipStart) return;
+  const dx = Math.abs(event.clientX - navTooltipStart.x);
+  const dy = Math.abs(event.clientY - navTooltipStart.y);
+  if(dx > 12 || dy > 12) clearNavTooltipPress();
+}
+
+function endNavTooltipPress(event){
+  if(navTooltipPointerId !== event.pointerId) return;
+  const showedTooltip = suppressNavClick;
+  clearNavTooltipPress({hideDelay:showedTooltip ? 450 : 0, keepSuppress:showedTooltip});
+}
+
+function cancelNavTooltipPress(){
+  clearNavTooltipPress();
+}
+
+function handleNavTooltipClick(event){
+  if(!suppressNavClick) return;
+  event.preventDefault();
+  event.stopPropagation();
+  suppressNavClick = false;
+}
+
+function setupNavTooltips(){
+  const nav = document.querySelector(".bottomNav");
+  if(!nav) return;
+  nav.addEventListener("click", handleNavTooltipClick, true);
+  nav.querySelectorAll("button").forEach(button=>{
+    button.addEventListener("pointerdown", startNavTooltipPress);
+    button.addEventListener("pointermove", moveNavTooltipPress);
+    button.addEventListener("pointerup", endNavTooltipPress);
+    button.addEventListener("pointercancel", cancelNavTooltipPress);
+    button.addEventListener("lostpointercapture", cancelNavTooltipPress);
+  });
+  window.addEventListener("resize", ()=>positionNavTooltip(navTooltipButton));
+  window.addEventListener("scroll", ()=>hideNavTooltip(), true);
+}
+
 function showNotesList(){
   state.notesView = "list";
   renderNotesView();
@@ -2875,6 +3015,7 @@ $("trainerNoteBtn").onclick=()=>runTrainer("note");
 $("trainerCancelBtn").onclick=cancelTrainer;
 $("trainerSaveResponseBtn").onclick=saveTrainerResponseAsNote;
 $("settingsNavBtn").onclick=()=>openDrawer("settings");
+setupNavTooltips();
 document.addEventListener("pointerdown", handleOutsideDrawerClick, true);
 window.addEventListener("resize", updateLayoutMetrics);
 window.addEventListener("resize", updateViewportEnvironment);
