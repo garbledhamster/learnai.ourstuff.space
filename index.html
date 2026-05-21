@@ -1,0 +1,2326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#d8c7a3" />
+  <title>AI Learning</title>
+  <script src="vendor/js-yaml.min.js"></script>
+  <style>
+    :root{
+      /*
+        Intentional neo-brutal color system:
+        - Ink + paper do most of the work.
+        - Acid is the single attention/action color.
+        - Blue is reference/source material.
+        - Amber is practice/caution/action-to-do.
+        - Violet is people/notes, used sparingly.
+      */
+      --primary-color:#d7ff35;
+      --secondary-color:#151515;
+      --background-color:#d8c7a3;
+      --surface-color:#ffffff;
+      --surface-muted-color:#1f3d2b;
+      --border-color:#000000;
+      --text-color:#151515;
+      --text-muted-color:#5f6368;
+      --danger-color:#b42318;
+      --card-color:#ffffff;
+      --shadow-color:#000000;
+      --accent-ink:#151515;
+      --body-bg:#ffffff;
+      --body-soft:#f4f4f4;
+      --body-softer:#fafafa;
+      --paper:#d8c7a3;
+      --panel:#ffffff;
+      --cream:#1f3d2b;
+      --ink:#151515;
+      --muted:#1f3d2b;
+      --accent:#d7ff35;
+      --reference:#9ed8ff;
+      --practice:#ffb84d;
+      --people:#e8ddff;
+      --line:var(--border-color);
+      --card-bg:var(--card-color);
+      --shadow:8px 8px 0 var(--shadow-color);
+      --shadow-sm:4px 4px 0 var(--shadow-color);
+      --font-ui: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --font-display: Arial, Helvetica, sans-serif;
+      --font-reading: Georgia, "Times New Roman", serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:var(--font-ui);
+      line-height:1.35;
+    }
+    button,a,input,textarea,select{font:inherit}
+    a{color:inherit;text-decoration:none}
+    button,a[role="button"],.hardBtn,.smallBtn,.resourceBtn,.topicBtn,.pathBtn,.termBtn,.tinyBtn,.taskBtn,.bottomNav button,.settingsOption,.socialPill,.linkItem{
+      -webkit-user-select:none;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .app{max-width:1480px;margin:0 auto;padding:18px;height:100vh}
+    .shell{
+      position:relative;
+      display:grid;
+      grid-template-rows:auto minmax(0,1fr) auto;
+      height:100%;
+      min-height:0;
+      background:var(--panel);
+      border:4px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+    .masthead{
+      position:sticky;
+      top:0;
+      z-index:30;
+      background:var(--cream);
+      color:var(--surface-color);
+      border-bottom:4px solid var(--line);
+      padding:22px;
+    }
+    .pageBody{
+      min-height:0;
+      overflow:auto;
+      background:var(--body-bg);
+    }
+    .kicker{font-size:12px;letter-spacing:.28em;text-transform:uppercase}
+    h1{font-size:clamp(22px,2.6vw,34px);line-height:1;margin:6px 0 0;text-transform:uppercase}
+    h2{font-size:clamp(26px,3vw,44px);line-height:1;margin:6px 0 0;text-transform:uppercase}
+    h3{margin:0 0 10px;text-transform:uppercase}
+    .masthead h1{margin:0}
+    .mastheadSub{
+      display:grid;
+      gap:2px;
+      margin-top:8px;
+      font-size:13px;
+      line-height:1.25;
+      letter-spacing:0;
+      font-weight:800;
+    }
+    h1,h2,h3,.pathTitle,.panelHead,.cardTitle,.hardBtn,.smallBtn,.resourceBtn strong,.tag,.noteTitle{
+      font-family:var(--font-display);
+      font-weight:900;
+      letter-spacing:-.025em;
+    }
+    .largeText,#topicWhy,.practiceBox{
+      font-family:var(--font-reading);
+    }
+    .cardTitle,.panelHead,.tag,.hardBtn,.smallBtn,.resourceBtn strong{
+      letter-spacing:.02em;
+    }
+    .top-grid{display:grid;grid-template-columns:1fr;gap:18px;align-items:end}
+    .pathbar{display:none;grid-template-columns:repeat(5,1fr);border-bottom:4px solid var(--line)}
+    .pathBtn{
+      min-height:150px;
+      padding:14px;
+      border:0;
+      border-right:4px solid var(--line);
+      background:var(--card-bg);
+      text-align:left;
+      cursor:pointer;
+      transition:.08s transform,.08s background;
+    }
+    .pathBtn:last-child{border-right:0}
+    .pathBtn:hover{background:var(--surface-muted-color)}
+    .pathBtn.active{background:linear-gradient(180deg,var(--accent) 0 12px,var(--card-bg) 12px 100%)}
+    .pathBtn:active,.hardBtn:active,.topicBtn:active,.resourceBtn:active,.smallBtn:active{transform:translate(2px,2px)}
+    .tag{
+      display:inline-block;
+      border:2px solid var(--line);
+      background:var(--card-bg);
+      padding:3px 7px;
+      font-size:11px;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+    .pathTitle{font-weight:900;text-transform:uppercase}
+    .pathSummary{font-size:12px;margin-top:8px}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr);min-height:740px}
+    .left{display:none;background:var(--muted);border-right:4px solid var(--line)}
+    .center{background:var(--panel)}
+    .right{background:var(--muted);border-left:4px solid var(--line)}
+    .panelHead{
+      padding:13px 14px;
+      border-bottom:4px solid var(--line);
+      font-weight:900;
+      text-transform:uppercase;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+    }
+    .topicList{display:grid;gap:8px;padding:12px}
+    .topicBtn{
+      border:2px solid var(--line);
+      background:var(--card-bg);
+      padding:11px;
+      text-align:left;
+      cursor:pointer;
+      display:grid;
+      grid-template-columns:34px 1fr;
+      gap:8px;
+      align-items:start;
+    }
+    .topicBtn.active{background:var(--line);color:var(--card-bg);box-shadow:inset 8px 0 0 var(--accent)}
+    .num{font-weight:900}
+    .topicText{
+      min-width:0;
+      display:grid;
+      grid-template-columns:minmax(0,max-content) minmax(130px,1fr);
+      align-items:center;
+      gap:12px;
+    }
+    .topicTitleText{
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .topicMeta{
+      justify-self:end;
+      min-width:0;
+      font-size:11px;
+      opacity:.8;
+      text-align:right;
+      white-space:nowrap;
+    }
+    .contentHead{padding:22px;border-bottom:4px solid var(--line);background:var(--card-bg)}
+    .headActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+    .hardBtn,.smallBtn,.resourceBtn{
+      border:2px solid var(--line);
+      background:var(--card-bg);
+      padding:9px 11px;
+      cursor:pointer;
+      font-weight:900;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      justify-content:center;
+    }
+    .hardBtn.primary,.smallBtn.primary{background:var(--accent)}
+    .hardBtn.primary,.smallBtn.primary,.bottomNav button.active,.settingsCurrent{color:var(--accent-ink)}
+    .hardBtn.blue{background:var(--reference)}
+    .hardBtn.pink{background:var(--people)}
+    .hardBtn.orange{background:var(--practice)}
+    .bodyGrid{display:grid;gap:16px;padding:18px}
+    .card{
+      border:4px solid var(--line);
+      background:var(--card-bg);
+      padding:16px;
+      box-shadow:var(--shadow-sm);
+    }
+    .card.cream{background:var(--cream)}
+    .card.green{background:var(--accent)}
+    .card.blue{background:var(--reference)}
+    .card.pink{background:var(--people)}
+    .cardTitle{font-weight:900;text-transform:uppercase;font-size:12px;margin-bottom:8px}
+    .personName{font-weight:900;text-transform:uppercase}
+    .socialRow{display:flex;gap:6px;flex-wrap:wrap}
+    .socialPill{
+      border:2px solid var(--line);
+      background:var(--cream);
+      padding:4px 6px;
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+    .socialPill:hover{background:var(--accent)}
+    .largeText{font-size:18px}
+    .twoCol{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .stepList,.miniList{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+    .stepList li,.miniItem{
+      border:2px solid var(--line);
+      background:var(--surface-muted-color);
+      padding:9px;
+      font-size:13px;
+    }
+    .taskBtn{
+      border:0;
+      background:transparent;
+      padding:0;
+      width:100%;
+      text-align:left;
+      cursor:pointer;
+      display:grid;
+      grid-template-columns:26px 1fr;
+      gap:7px;
+      align-items:start;
+    }
+    .taskBtn.done{text-decoration:line-through;text-decoration-thickness:2px;opacity:.62}
+    .taskCheck{
+      width:18px;
+      height:18px;
+      border:2px solid var(--line);
+      background:var(--card-bg);
+      display:inline-block;
+      margin-top:1px;
+    }
+    .taskBtn.done .taskCheck{background:var(--accent);box-shadow:inset 0 0 0 4px var(--card-bg)}
+    .termRow{display:flex;flex-wrap:wrap;gap:8px}
+    .termBtn{
+      border:2px solid var(--line);
+      background:var(--cream);
+      padding:8px 10px;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .termBtn:hover{background:var(--accent)}
+    .resourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .resourceBtn{
+      min-height:92px;
+      position:relative;
+      align-items:flex-start;
+      flex-direction:column;
+      text-align:left;
+      font-weight:400;
+    }
+    .resourceBtn strong{font-weight:900;text-transform:uppercase}
+    .resourceBtn span{font-size:12px}
+    .resourceBtn.green{background:var(--accent);box-shadow:var(--shadow-sm)}
+    .resourceBtn.blue{background:var(--reference)}
+    .resourceBtn.pink{background:var(--people)}
+    .resourceBtn.orange{background:var(--practice)}
+    .resourceBtn.cream{background:var(--cream)}
+    .practiceBox{
+      border:3px solid var(--line);
+      background:var(--card-bg);
+      padding:12px;
+      white-space:pre-wrap;
+      font-size:13px;
+    }
+    .rightBody{padding:12px;display:grid;gap:14px}
+    .field{display:grid;gap:5px}
+    label{font-size:11px;font-weight:900;text-transform:uppercase}
+    input,textarea,select{
+      border:3px solid var(--line);
+      background:var(--card-bg);
+      color:var(--ink);
+      padding:9px;
+      outline:none;
+      width:100%;
+    }
+    option{background:var(--panel);color:var(--ink)}
+    textarea{resize:none;min-height:100px}
+    input:focus,textarea:focus,select:focus{background:var(--cream)}
+    .noteTools{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .editorActions{
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      gap:8px;
+      align-items:center;
+      margin-top:10px;
+    }
+    .templateGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    .noteFilters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .noteList{display:grid;gap:8px;max-height:430px;overflow:auto;padding-right:3px}
+    #drawerNotes .noteList{
+      border:0;
+      box-shadow:none;
+      background:transparent;
+      padding:0 3px 0 0;
+      max-height:none;
+      min-height:0;
+    }
+    .noteCard{
+      border:3px solid var(--line);
+      background:var(--card-bg);
+      padding:10px;
+    }
+    .noteCard.pinned{background:var(--cream)}
+    .noteCard.archived{opacity:.55}
+    .noteTop{display:flex;justify-content:space-between;gap:10px}
+    .noteTitle{font-weight:900;text-transform:uppercase}
+    .noteText{font-size:12px;margin-top:7px;white-space:pre-wrap}
+    .noteMeta{font-size:10px;margin-top:6px;opacity:.75}
+    .noteActions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .hiddenPanel{display:none !important}
+    #notesEditorView.hiddenPanel{display:none}
+    #notesEditorView:not(.hiddenPanel){
+      display:grid;
+      height:100%;
+      min-height:0;
+    }
+    .tinyBtn{
+      border:2px solid var(--line);
+      background:var(--card-bg);
+      padding:4px 6px;
+      cursor:pointer;
+      font-size:11px;
+      font-weight:900;
+    }
+    .tinyBtn:hover{background:var(--accent)}
+    .sideCard{border:4px solid var(--line);background:var(--card-bg);padding:12px}
+    .personBookList{display:grid;gap:8px}
+    .linkItem{
+      border:2px solid var(--line);
+      background:var(--card-bg);
+      padding:8px;
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      font-size:12px;
+    }
+    .linkItem:hover{background:var(--cream)}
+    .linkItem.green{background:var(--accent)}
+    .linkItem.blue{background:var(--reference)}
+    .linkItem.pink{background:var(--people)}
+    .pageBody .center,
+    .pageBody .left,
+    .pageBody .right{
+      background:var(--body-bg);
+    }
+    .pageBody .contentHead,
+    .pageBody .card,
+    .pageBody .card.cream,
+    .pageBody .sideCard,
+    .pageBody .practiceBox,
+    .pageBody .statusLine{
+      background:var(--body-bg);
+    }
+    .pageBody .hardBtn.primary,
+    .pageBody .hardBtn.blue,
+    .pageBody .hardBtn.pink,
+    .pageBody .hardBtn.orange,
+    .pageBody .smallBtn.primary,
+    .pageBody .smallBtn.blue,
+    .pageBody .smallBtn.pink{
+      background:var(--card-bg);
+    }
+    .pageBody .card.green,
+    .pageBody .card.blue,
+    .pageBody .card.pink,
+    .pageBody .card.orange,
+    .pageBody .resourceBtn.green,
+    .pageBody .resourceBtn.blue,
+    .pageBody .resourceBtn.pink,
+    .pageBody .resourceBtn.orange,
+    .pageBody .resourceBtn.cream,
+    .pageBody .linkItem.green,
+    .pageBody .linkItem.blue,
+    .pageBody .linkItem.pink{
+      background:var(--card-bg);
+      box-shadow:none;
+    }
+    .pageBody .termBtn,
+    .pageBody .socialPill,
+    .pageBody .stepList li,
+    .pageBody .miniItem{
+      background:var(--body-bg);
+    }
+    .pageBody .topicBtn:hover,
+    .pageBody .pathBtn:hover,
+    .pageBody .termBtn:hover,
+    .pageBody .socialPill:hover,
+    .pageBody .linkItem:hover,
+    .pageBody .tinyBtn:hover{
+      background:var(--body-soft);
+    }
+    .pageBody input:focus,
+    .pageBody textarea:focus,
+    .pageBody select:focus{
+      background:var(--body-softer);
+    }
+    .pageBody .taskBtn.done .taskCheck{
+      background:var(--line);
+      box-shadow:inset 0 0 0 4px var(--card-bg);
+    }
+    html[data-theme="monokai"]{
+      color-scheme:dark;
+    }
+    html[data-theme="monokai"] .shell{
+      border-color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .masthead{
+      background:var(--surface-muted-color);
+      border-bottom-color:var(--primary-color);
+    }
+    html[data-theme="monokai"] .masthead .kicker,
+    html[data-theme="monokai"] .contentHead .kicker{
+      color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .masthead h1,
+    html[data-theme="monokai"] #topicTitle{
+      color:var(--primary-color);
+    }
+    html[data-theme="monokai"] .pageBody .contentHead{
+      border-bottom-color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .pageBody .card{
+      border-color:var(--surface-muted-color);
+      box-shadow:4px 4px 0 var(--border-color);
+    }
+    html[data-theme="monokai"] .pageBody .cardTitle{
+      color:var(--primary-color);
+    }
+    html[data-theme="monokai"] .pageBody h3{
+      color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .pageBody .hardBtn.primary,
+    html[data-theme="monokai"] .pageBody .smallBtn.primary{
+      background:var(--primary-color);
+      border-color:var(--primary-color);
+      color:var(--accent-ink);
+    }
+    html[data-theme="monokai"] .pageBody .hardBtn.blue,
+    html[data-theme="monokai"] .pageBody .smallBtn.blue{
+      background:var(--secondary-color);
+      border-color:var(--secondary-color);
+      color:var(--accent-ink);
+    }
+    html[data-theme="monokai"] .pageBody .hardBtn.orange,
+    html[data-theme="monokai"] .pageBody .resourceBtn.orange{
+      border-color:var(--practice);
+      box-shadow:inset 8px 0 0 var(--practice);
+    }
+    html[data-theme="monokai"] .pageBody .hardBtn.pink,
+    html[data-theme="monokai"] .pageBody .smallBtn.pink,
+    html[data-theme="monokai"] .pageBody .resourceBtn.pink{
+      border-color:var(--people);
+      box-shadow:inset 8px 0 0 var(--people);
+    }
+    html[data-theme="monokai"] .pageBody .resourceBtn.green,
+    html[data-theme="monokai"] .pageBody .linkItem.green{
+      border-color:var(--primary-color);
+      box-shadow:inset 8px 0 0 var(--primary-color);
+    }
+    html[data-theme="monokai"] .pageBody .resourceBtn.blue,
+    html[data-theme="monokai"] .pageBody .linkItem.blue{
+      border-color:var(--secondary-color);
+      box-shadow:inset 8px 0 0 var(--secondary-color);
+    }
+    html[data-theme="monokai"] .pageBody .resourceBtn.green,
+    html[data-theme="monokai"] .pageBody .resourceBtn.blue,
+    html[data-theme="monokai"] .pageBody .resourceBtn.orange,
+    html[data-theme="monokai"] .pageBody .resourceBtn.pink,
+    html[data-theme="monokai"] .pageBody .linkItem.green,
+    html[data-theme="monokai"] .pageBody .linkItem.blue,
+    html[data-theme="monokai"] .pageBody .linkItem.pink{
+      padding:12px 12px 12px 18px;
+    }
+    html[data-theme="monokai"] .pageBody .resourceBtn strong{
+      color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .pageBody .resourceBtn.green strong,
+    html[data-theme="monokai"] .pageBody .linkItem.green b{
+      color:var(--primary-color);
+    }
+    html[data-theme="monokai"] .pageBody .resourceBtn.orange strong{
+      color:var(--practice);
+    }
+    html[data-theme="monokai"] .pageBody .resourceBtn.pink strong{
+      color:var(--people);
+    }
+    html[data-theme="monokai"] .pageBody .termBtn,
+    html[data-theme="monokai"] .pageBody .socialPill{
+      border-color:var(--secondary-color);
+      color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .pageBody .termBtn:hover,
+    html[data-theme="monokai"] .pageBody .socialPill:hover,
+    html[data-theme="monokai"] .pageBody .linkItem:hover,
+    html[data-theme="monokai"] .pageBody .tinyBtn:hover{
+      background:var(--secondary-color);
+      color:var(--accent-ink);
+    }
+    html[data-theme="monokai"] .pageBody .taskCheck{
+      border-color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .pageBody .taskBtn.done .taskCheck{
+      background:var(--primary-color);
+      box-shadow:inset 0 0 0 4px var(--body-bg);
+    }
+    html[data-theme="monokai"] .menuDock{
+      background:var(--surface-muted-color);
+      border-top-color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .bottomNav{
+      background:var(--secondary-color);
+      border-color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .bottomNav button:not(.active){
+      color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .bottomDrawer{
+      border-color:var(--secondary-color);
+    }
+    html[data-theme="monokai"] .drawerGrid .pathBtn.active{
+      border-color:var(--primary-color);
+    }
+    html[data-theme="monokai"] .drawerGrid .pathBtn.active .tag,
+    html[data-theme="monokai"] .settingsCurrent{
+      background:var(--primary-color);
+      border-color:var(--primary-color);
+      color:var(--accent-ink);
+    }
+    html[data-theme="monokai"] .drawerTopics .topicBtn.active,
+    html[data-theme="monokai"] .settingsOption.active{
+      border-color:var(--secondary-color);
+      box-shadow:inset 8px 0 0 var(--primary-color);
+      padding-left:18px;
+    }
+    html[data-theme="monokai"] .settingsTitle,
+    html[data-theme="monokai"] .settingsOption strong{
+      color:var(--primary-color);
+    }
+    .muted{font-size:12px;opacity:.75}
+    .statusLine{
+      border-top:4px solid var(--line);
+      padding:10px 14px;
+      background:var(--card-bg);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .toast{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      background:var(--line);
+      color:var(--card-bg);
+      padding:12px 14px;
+      border:3px solid var(--line);
+      box-shadow:var(--shadow-sm);
+      transform:translateY(140%);
+      transition:.18s transform;
+      z-index:10;
+      max-width:360px;
+      font-size:13px;
+    }
+    .toast.show{transform:translateY(0)}
+    .bottomNav{
+      position:relative;
+      z-index:24;
+      width:min(660px, calc(100% - 24px));
+      max-width:calc(100% - 24px);
+      margin:0 auto;
+      display:flex;
+      gap:8px;
+      background:var(--line);
+      border:3px solid var(--line);
+      box-shadow:var(--shadow-sm);
+      padding:6px;
+    }
+    .bottomNav button{
+      border:2px solid var(--line);
+      background:var(--card-bg);
+      min-width:92px;
+      flex:1 1 0;
+      padding:10px 16px;
+      cursor:pointer;
+      font-weight:900;
+      text-transform:uppercase;
+      white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+      justify-content:center;
+    }
+    .bottomNav button.active{background:var(--accent)}
+    .navIcon{
+      width:18px;
+      height:18px;
+      display:block;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2.4;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      flex:0 0 auto;
+    }
+    .bottomDrawer{
+      position:absolute;
+      left:50%;
+      width:min(760px, calc(100vw - 22px));
+      top:var(--masthead-height, 132px);
+      bottom:var(--menu-dock-height, 88px);
+      overflow:hidden;
+      background:var(--panel);
+      border:4px solid var(--line);
+      box-shadow:var(--shadow);
+      margin:0;
+      transform:translateX(-50%);
+      display:none;
+      z-index:22;
+    }
+    .bottomDrawer.open{display:grid;grid-template-rows:minmax(0,1fr)}
+    .bottomDrawer.editorMode{grid-template-rows:minmax(0,1fr)}
+    .bottomDrawer.editorMode #drawerNotes > .panelHead{display:none}
+    .menuDock{
+      border-top:4px solid var(--line);
+      background:var(--cream);
+      padding:10px 0 12px;
+    }
+    .drawerBody{padding:12px;min-height:0;overflow:auto}
+    .bottomDrawer.editorMode .drawerBody{padding:12px}
+    #drawerLessons,#drawerTopics,#drawerTrainer,#drawerSettings{height:100%;display:grid;align-items:end;padding-bottom:18px}
+    #drawerLessons.hiddenPanel,#drawerTopics.hiddenPanel,#drawerTrainer.hiddenPanel,#drawerSettings.hiddenPanel{display:none}
+    #drawerNotes{height:100%;min-height:0}
+    .bottomDrawer.editorMode #drawerNotes{display:grid;grid-template-rows:minmax(0,1fr)}
+    .drawerGrid,.drawerTopics,.settingsList{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+      width:min(100%, 980px);
+      margin:0 auto;
+    }
+    .drawerGrid .pathBtn{
+      min-height:0;
+      border:2px solid var(--line);
+      padding:8px 10px;
+      display:grid;
+      grid-template-columns:96px 1fr;
+      align-items:center;
+      gap:10px;
+    }
+    .drawerGrid .pathBtn.active{background:linear-gradient(90deg,var(--accent) 0 10px,var(--card-bg) 10px 100%)}
+    .drawerGrid .tag{margin-bottom:0;text-align:center}
+    .drawerGrid .pathSummary{display:none}
+    .drawerGrid .pathTitle{font-size:14px}
+    .drawerTopics .topicBtn{
+      min-height:0;
+      padding:9px 11px;
+      grid-template-columns:46px 1fr;
+      align-items:center;
+    }
+    .trainerPanel{
+      width:min(100%, 980px);
+      margin:0 auto;
+      display:grid;
+      gap:10px;
+      max-height:100%;
+      overflow:auto;
+      padding-right:3px;
+    }
+    .trainerControls{
+      border:3px solid var(--line);
+      background:var(--card-bg);
+      padding:10px;
+      display:grid;
+      gap:10px;
+    }
+    #trainerNotesRange{
+      border:0;
+      padding:0;
+      accent-color:var(--accent);
+    }
+    #trainerNotesRange::-webkit-slider-runnable-track{
+      height:8px;
+      border:1px solid var(--line);
+      background:var(--muted);
+    }
+    #trainerNotesRange::-webkit-slider-thumb{
+      appearance:none;
+      width:18px;
+      height:18px;
+      border:2px solid var(--line);
+      background:var(--accent);
+      margin-top:-6px;
+    }
+    #trainerNotesRange::-moz-range-track{
+      height:8px;
+      border:1px solid var(--line);
+      background:var(--muted);
+    }
+    #trainerNotesRange::-moz-range-thumb{
+      width:18px;
+      height:18px;
+      border:2px solid var(--line);
+      background:var(--accent);
+    }
+    .trainerActions{
+      display:grid;
+      grid-template-columns:1fr 1fr auto;
+      gap:8px;
+      align-items:center;
+    }
+    .trainerResponse{
+      border:3px solid var(--line);
+      background:var(--people);
+      padding:10px;
+      min-height:120px;
+      white-space:pre-wrap;
+      font-family:var(--font-reading);
+    }
+    .trainerMeta{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .noteCard.trainer{
+      border-color:var(--line);
+      background:var(--people);
+      box-shadow:inset 8px 0 0 var(--line);
+    }
+    .settingsCategory{
+      border:3px solid var(--line);
+      background:var(--card-bg);
+      box-shadow:var(--shadow-sm);
+      padding:12px;
+      display:grid;
+      gap:10px;
+    }
+    .settingsCategoryHead{
+      border-bottom:2px solid var(--line);
+      padding-bottom:8px;
+      display:flex;
+      justify-content:space-between;
+      align-items:start;
+      gap:12px;
+    }
+    .settingsTitle{
+      display:block;
+      font-family:var(--font-display);
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.02em;
+    }
+    .settingsCurrent{
+      border:2px solid var(--line);
+      background:var(--accent);
+      padding:4px 7px;
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .settingsRadioGroup{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:6px;
+    }
+    .settingsOption{
+      border:2px solid var(--line);
+      background:var(--panel);
+      padding:8px;
+      display:grid;
+      grid-template-columns:20px 1fr;
+      align-items:start;
+      gap:8px;
+      cursor:pointer;
+      font-size:12px;
+    }
+    .settingsOption.active{background:var(--cream)}
+    .settingsOption input{
+      width:16px;
+      height:16px;
+      margin:1px 0 0;
+      accent-color:var(--line);
+    }
+    .settingsOption strong{
+      display:block;
+      font-family:var(--font-display);
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.02em;
+    }
+    .settingsField{
+      display:grid;
+      gap:6px;
+    }
+    .settingsSelect{
+      background:var(--panel);
+      cursor:pointer;
+    }
+    .drawerNotesGrid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      align-items:stretch;
+      min-height:340px;
+    }
+    .drawerNotesWide{grid-column:1 / -1}
+    .editorSurface{
+      border:0;
+      box-shadow:none;
+      background:transparent;
+      padding:0;
+      min-height:0;
+      height:100%;
+      display:grid;
+      grid-template-rows:auto auto minmax(180px,1fr) auto;
+    }
+    .noteBodyField{min-height:0}
+    #noteBody{
+      height:100%;
+      min-height:190px;
+    }
+    .hidden{display:none !important}
+    @media(max-width:1180px){
+      .layout{grid-template-columns:1fr}
+      .right{border-left:0;border-top:4px solid var(--line)}
+      .rightBody{grid-template-columns:1fr 1fr}
+      .notesBlock{grid-column:1 / -1}
+      .drawerNotesGrid{grid-template-columns:1fr}
+    }
+    @media(max-width:820px){
+      .app{padding:8px}
+      .top-grid{grid-template-columns:1fr}
+      .pathbar{grid-template-columns:1fr}
+      .pathBtn{border-right:0;border-bottom:4px solid var(--line);min-height:auto}
+      .pathBtn:last-child{border-bottom:0}
+      .right{border-left:0}
+      .twoCol,.resourceGrid,.rightBody,.peopleGrid{grid-template-columns:1fr}
+      .bottomNav{width:calc(100% - 16px);max-width:calc(100% - 16px)}
+      .bottomNav button{font-size:12px;padding:8px 6px;min-width:0}
+      .drawerGrid .pathBtn{grid-template-columns:1fr}
+      .settingsRadioGroup{grid-template-columns:1fr}
+      .settingsCategoryHead{display:grid}
+      .settingsCurrent{width:max-content}
+      .drawerNotesGrid{grid-template-columns:1fr}
+    }
+    @media(max-width:620px){
+      .bottomNav{
+        width:min(390px, calc(100% - 16px));
+        gap:6px;
+        padding:5px;
+      }
+      .bottomNav button{
+        min-width:0;
+        min-height:44px;
+        padding:8px;
+        gap:0;
+      }
+      .bottomNav button span{
+        position:absolute;
+        width:1px;
+        height:1px;
+        padding:0;
+        margin:-1px;
+        overflow:hidden;
+        clip:rect(0, 0, 0, 0);
+        white-space:nowrap;
+        border:0;
+      }
+      .navIcon{
+        width:20px;
+        height:20px;
+      }
+    }
+    @media(max-width:520px){
+      .topicText{
+        grid-template-columns:1fr;
+        gap:2px;
+      }
+      .topicMeta{
+        justify-self:start;
+        text-align:left;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="shell">
+    <header class="masthead">
+      <div class="top-grid">
+        <div>
+          <h1>AI Learning</h1>
+          <div class="mastheadSub" aria-label="Brought to you by ourstuff.space, an ecosystem for developing yourself.">
+            <span>Brought to you by ourstuff.space,</span>
+            <span>an ecosystem for developing yourself.</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="pageBody">
+      <nav class="pathbar" id="pathbar"></nav>
+
+      <main class="layout">
+        <aside class="left">
+          <div class="panelHead">
+            <span>Path Topics</span>
+            <span id="topicCount" class="muted"></span>
+          </div>
+          <div class="topicList" id="topicList"></div>
+        </aside>
+
+        <section class="center">
+          <div class="contentHead">
+            <div class="kicker" id="currentPathLabel"></div>
+            <h2 id="topicTitle"></h2>
+            <div class="muted" id="topicLevel"></div>
+            <div class="headActions">
+              <button class="hardBtn primary" id="addTakeawayBtn">+ Definition Note</button>
+              <button class="hardBtn blue" id="addQuestionBtn">+ Confusion Note</button>
+              <button class="hardBtn orange" id="copyPracticeBtn">Copy Practice</button>
+              <button class="hardBtn" id="resetBtn">Reset View</button>
+            </div>
+          </div>
+
+          <div class="bodyGrid">
+            <div class="card cream">
+              <div class="cardTitle">Plain English</div>
+              <div class="largeText" id="topicSummary"></div>
+            </div>
+
+            <div class="card">
+              <div class="cardTitle">Why This Matters</div>
+              <div id="topicWhy"></div>
+            </div>
+
+            <div class="twoCol">
+              <div class="card">
+                <div class="cardTitle">Tasklist</div>
+                <ul class="stepList" id="stepList"></ul>
+              </div>
+              <div class="card">
+                <div class="cardTitle">Key Terms</div>
+                <div class="termRow" id="terms"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="cardTitle">Quick Links</div>
+              <div class="muted" style="margin-bottom:10px">Get started with videos, books, examples, and sources that help you understand the whole idea.</div>
+              <div class="resourceGrid" id="resourceGrid"></div>
+            </div>
+
+            <div class="twoCol">
+              <div class="card">
+                <h3>People To Look At</h3>
+                <div class="personBookList" id="peopleList"></div>
+              </div>
+
+              <div class="card">
+                <h3>Books / Reading</h3>
+                <div class="personBookList" id="bookList"></div>
+              </div>
+            </div>
+
+            <div class="card orange">
+              <div class="cardTitle">Practice Task</div>
+              <div class="practiceBox" id="practiceBox"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <div class="statusLine">
+        <span id="statusPath"></span>
+        <span>Notes save locally in this browser. Lookup buttons open the selected search engine.</span>
+      </div>
+    </div>
+
+    <div class="menuDock">
+      <div class="bottomDrawer" id="bottomDrawer" aria-hidden="true">
+      <div class="drawerBody">
+        <div class="drawerPanel" id="drawerLessons"></div>
+        <div class="drawerPanel hiddenPanel" id="drawerTopics"></div>
+        <div class="drawerPanel hiddenPanel" id="drawerNotes">
+          <div class="panelHead">
+            <span>Study Notes</span>
+            <span id="noteCount" class="muted"></span>
+          </div>
+          <div id="notesListView" class="drawerNotesGrid" style="margin-top:12px">
+            <div class="sideCard notesBlock">
+              <div class="muted" style="margin-bottom:10px">Search, filter, and open notes. Use New Note or a template to open the editor.</div>
+              <div class="noteTools">
+                <button class="smallBtn primary" id="newNoteBtn">New Note</button>
+                <button class="smallBtn blue" id="exportNotesBtn">Export</button>
+                <label class="smallBtn pink" style="cursor:pointer">
+                  Import
+                  <input id="importNotesInput" type="file" accept="application/json" class="hidden" />
+                </label>
+                <button class="smallBtn" id="showAllNotesBtn">All Notes</button>
+              </div>
+              <div class="templateGrid">
+                <button class="smallBtn" data-template="blackbox">Black Box</button>
+                <button class="smallBtn" data-template="firstprinciples">First Principles</button>
+                <button class="smallBtn" data-template="5w2h">5W2H</button>
+                <button class="smallBtn" data-template="miniessay">Mini Essay</button>
+              </div>
+              <div class="noteFilters" style="margin-top:10px">
+                <div class="field">
+                  <label for="filterScope">Show</label>
+                  <select id="filterScope">
+                    <option value="topic">This Topic</option>
+                    <option value="path">This Path</option>
+                    <option value="all">All Notes</option>
+                    <option value="archive">Archive</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="filterType">Type</label>
+                  <select id="filterType">
+                    <option value="all">All Types</option>
+                    <option>Definition</option>
+                    <option>Question</option>
+                    <option>Confusion</option>
+                    <option>Example</option>
+                    <option>Person</option>
+                    <option>Book</option>
+                    <option>Practice</option>
+                    <option>Cert Term</option>
+                    <option>Trainer</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="noteList" id="noteList"></div>
+          </div>
+
+          <div id="notesEditorView" class="hiddenPanel">
+            <div class="editorSurface">
+              <div class="field">
+                <label for="noteTitle">Title</label>
+                <input id="noteTitle" placeholder="Short note title" />
+              </div>
+              <div class="noteFilters" style="margin-top:8px">
+                <div class="field">
+                  <label for="noteType">Type</label>
+                  <select id="noteType">
+                    <option>Definition</option>
+                    <option>Question</option>
+                    <option>Confusion</option>
+                    <option>Example</option>
+                    <option>Person</option>
+                    <option>Book</option>
+                    <option>Practice</option>
+                    <option>Cert Term</option>
+                    <option>Trainer</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="noteScope">Scope</label>
+                  <select id="noteScope">
+                    <option value="topic">Current Topic</option>
+                    <option value="path">Whole Path</option>
+                    <option value="general">General</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field noteBodyField" style="margin-top:8px">
+                <label for="noteBody">Note</label>
+                <textarea id="noteBody" placeholder="Write the note here..."></textarea>
+              </div>
+              <div class="editorActions">
+                <button class="smallBtn primary" id="saveNoteBtn">Save Note</button>
+                <button class="smallBtn" id="clearEditorBtn">Clear</button>
+                <button class="smallBtn blue" id="backToNotesBtn2">Back To List</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="drawerPanel hiddenPanel" id="drawerTrainer">
+          <div class="trainerPanel">
+            <div class="trainerControls">
+              <div class="trainerMeta">
+                <span class="noteTitle">Trainer</span>
+                <span class="muted" id="trainerContextStats"></span>
+              </div>
+              <div class="field">
+                <label for="trainerNotesRange">Notes To Send</label>
+                <input id="trainerNotesRange" type="range" min="0" max="18" step="1" />
+                <div class="muted" id="trainerNotesRangeLabel"></div>
+              </div>
+              <div class="field">
+                <label for="trainerQuestion">Question</label>
+                <textarea id="trainerQuestion" maxlength="700" placeholder="Ask where you are, what to study next, or what your notes are missing."></textarea>
+              </div>
+              <div class="trainerActions">
+                <button class="smallBtn primary" id="trainerAskBtn">Ask Trainer</button>
+                <button class="smallBtn blue" id="trainerNoteBtn">Trainer Note</button>
+                <button class="smallBtn" id="trainerCancelBtn">Cancel</button>
+              </div>
+              <div class="trainerResponse" id="trainerResponse">Ask a question or generate a trainer note. The trainer uses your current path, topic, tasklist, and selected notes.</div>
+              <button class="smallBtn pink" id="trainerSaveResponseBtn">Save Response As Note</button>
+            </div>
+          </div>
+        </div>
+        <div class="drawerPanel hiddenPanel" id="drawerSettings">
+          <div class="settingsList" id="searchEngineList"></div>
+        </div>
+      </div>
+      </div>
+
+      <nav class="bottomNav" aria-label="Learning navigation">
+      <button id="lessonsNavBtn" data-drawer-tab="lessons" aria-label="Lessons">
+        <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"></path>
+          <path d="M4 5.5v16"></path>
+          <path d="M8 7h8"></path>
+          <path d="M8 11h6"></path>
+        </svg>
+        <span>Lessons</span>
+      </button>
+      <button id="topicsNavBtn" data-drawer-tab="topics" aria-label="Topics">
+        <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 6h14"></path>
+          <path d="M5 12h14"></path>
+          <path d="M5 18h14"></path>
+          <path d="M3 6h.01"></path>
+          <path d="M3 12h.01"></path>
+          <path d="M3 18h.01"></path>
+        </svg>
+        <span>Topics</span>
+      </button>
+      <button id="notesNavBtn" aria-label="Notes">
+        <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 3h8l4 4v14H7z"></path>
+          <path d="M15 3v5h5"></path>
+          <path d="M10 12h6"></path>
+          <path d="M10 16h6"></path>
+        </svg>
+        <span>Notes</span>
+      </button>
+      <button id="trainerNavBtn" aria-label="Trainer">
+        <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v4"></path>
+          <path d="M12 17v4"></path>
+          <path d="M4.2 7.5l3.4 2"></path>
+          <path d="M16.4 14.5l3.4 2"></path>
+          <path d="M19.8 7.5l-3.4 2"></path>
+          <path d="M7.6 14.5l-3.4 2"></path>
+          <path d="M8 12a4 4 0 1 0 8 0a4 4 0 0 0-8 0z"></path>
+        </svg>
+        <span>Trainer</span>
+      </button>
+      <button id="settingsNavBtn" aria-label="Settings">
+        <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z"></path>
+          <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.04.04a2 2 0 1 1-2.83 2.83l-.04-.04A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6V20a2 2 0 1 1-4 0v-.06a1.7 1.7 0 0 0-1-.6a1.7 1.7 0 0 0-1.87.34l-.04.04a2 2 0 1 1-2.83-2.83l.04-.04A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1H4a2 2 0 1 1 0-4h.06a1.7 1.7 0 0 0 .6-1a1.7 1.7 0 0 0-.34-1.87l-.04-.04a2 2 0 1 1 2.83-2.83l.04.04A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6V4a2 2 0 1 1 4 0v.06a1.7 1.7 0 0 0 1 .6a1.7 1.7 0 0 0 1.87-.34l.04-.04a2 2 0 1 1 2.83 2.83l-.04.04A1.7 1.7 0 0 0 19.4 9c.22.35.42.68.6 1H20a2 2 0 1 1 0 4h-.06a1.7 1.7 0 0 0-.54 1z"></path>
+        </svg>
+        <span>Settings</span>
+      </button>
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let official = {};
+let paths = [];
+let topicDetails = {};
+let peopleBank = {};
+let bookBank = {};
+const CONTENT_URL = "content.yaml";
+const THEME_URL = "themes.yaml";
+const THEME_STORAGE_KEY = "aiNavigatorThemePresetV1";
+const DEFAULT_THEME_ID = "fieldGuide";
+const DEFAULT_THEME_COLORS = {
+  primaryColor:"#d7ff35",
+  secondaryColor:"#151515",
+  backgroundColor:"#d8c7a3",
+  surfaceColor:"#ffffff",
+  surfaceMutedColor:"#1f3d2b",
+  borderColor:"#000000",
+  textColor:"#151515",
+  textMutedColor:"#5f6368",
+  dangerColor:"#b42318",
+  cardColor:"#ffffff",
+  shadowColor:"#000000",
+  accentTextColor:"#151515",
+  bodyBackgroundColor:"#ffffff",
+  bodySoftColor:"#f4f4f4",
+  bodySofterColor:"#fafafa",
+  referenceColor:"#9ed8ff",
+  practiceColor:"#ffb84d",
+  peopleColor:"#e8ddff"
+};
+const DEFAULT_THEME = {id:DEFAULT_THEME_ID, label:"Field Guide", colors:DEFAULT_THEME_COLORS};
+let themePresetList = [DEFAULT_THEME];
+let themePresets = {[DEFAULT_THEME_ID]:DEFAULT_THEME};
+
+async function loadThemePresets(){
+  const response = await fetch(THEME_URL, {cache:"no-store"});
+  if(!response.ok) throw new Error("Could not load " + THEME_URL + ": " + response.status);
+  const raw = await response.text();
+  const parser = window.jsyaml?.load;
+  if(!parser) throw new Error("YAML parser did not load. Check vendor/js-yaml.min.js.");
+  const data = parser(raw);
+  if(!Array.isArray(data)) throw new Error("themes.yaml must be a list.");
+  const presets = data
+    .filter(theme => theme && theme.id && theme.colors)
+    .map(theme => ({
+      id:String(theme.id),
+      label:String(theme.label || theme.id),
+      colors:{...theme.colors}
+    }));
+  themePresetList = presets.some(theme => theme.id === DEFAULT_THEME_ID) ? presets : [DEFAULT_THEME, ...presets];
+  themePresets = Object.fromEntries(themePresetList.map(theme => [theme.id, theme]));
+  if(!themePresets[state.themeId]) state.themeId = DEFAULT_THEME_ID;
+}
+
+function currentTheme(){
+  return themePresets[state.themeId] || themePresets[DEFAULT_THEME_ID] || DEFAULT_THEME;
+}
+
+function applyThemeColors(){
+  const theme = currentTheme();
+  const colors = {...DEFAULT_THEME_COLORS, ...(theme.colors || {})};
+  const root = document.documentElement;
+  root.dataset.theme = theme.id;
+  const set = (name, value) => root.style.setProperty(name, value);
+  set("--primary-color", colors.primaryColor);
+  set("--secondary-color", colors.secondaryColor);
+  set("--background-color", colors.backgroundColor);
+  set("--surface-color", colors.surfaceColor);
+  set("--surface-muted-color", colors.surfaceMutedColor);
+  set("--border-color", colors.borderColor);
+  set("--text-color", colors.textColor);
+  set("--text-muted-color", colors.textMutedColor);
+  set("--danger-color", colors.dangerColor);
+  set("--card-color", colors.cardColor || colors.surfaceColor);
+  set("--shadow-color", colors.shadowColor || colors.borderColor);
+  set("--accent-ink", colors.accentTextColor || colors.backgroundColor);
+  set("--body-bg", colors.bodyBackgroundColor || colors.cardColor || colors.surfaceColor);
+  set("--body-soft", colors.bodySoftColor || colors.surfaceMutedColor);
+  set("--body-softer", colors.bodySofterColor || colors.surfaceColor);
+  set("--paper", colors.backgroundColor);
+  set("--panel", colors.surfaceColor);
+  set("--cream", colors.surfaceMutedColor);
+  set("--ink", colors.textColor);
+  set("--muted", colors.mutedColor || colors.surfaceMutedColor);
+  set("--accent", colors.primaryColor);
+  set("--reference", colors.referenceColor || colors.secondaryColor);
+  set("--practice", colors.practiceColor || colors.surfaceMutedColor);
+  set("--people", colors.peopleColor || colors.surfaceMutedColor);
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if(metaTheme) metaTheme.setAttribute("content", colors.backgroundColor);
+}
+
+async function loadLearningContent(){
+  const response = await fetch(CONTENT_URL, {cache:"no-store"});
+  if(!response.ok) throw new Error("Could not load " + CONTENT_URL + ": " + response.status);
+  const raw = await response.text();
+  const parser = window.jsyaml?.load;
+  if(!parser) throw new Error("YAML parser did not load. Check vendor/js-yaml.min.js.");
+  applyLearningContent(parser(raw));
+}
+
+function applyLearningContent(content){
+  if(!content || typeof content !== "object") throw new Error("Content YAML is empty or invalid.");
+  official = content.official || {};
+  paths = Array.isArray(content.paths) ? content.paths : [];
+  peopleBank = content.people || content.peopleBank || {};
+  bookBank = content.books || content.bookBank || {};
+  const rawTopics = content.topics || content.topicDetails || {};
+  topicDetails = Object.fromEntries(Object.entries(rawTopics).map(([id, topic])=>{
+    const officialRef = topic.official;
+    const officialUrl = official[officialRef] || officialRef || "";
+    return [id, {...topic, official:officialUrl}];
+  }));
+  if(!paths.length) throw new Error("Content YAML needs at least one path.");
+  if(!Object.keys(topicDetails).length) throw new Error("Content YAML needs topics.");
+  if(!paths.find(p=>p.id===state.pathId)) state.pathId = paths[0].id;
+  const path = paths.find(p=>p.id===state.pathId) || paths[0];
+  if(!topicDetails[state.topicId]) state.topicId = path.topics?.[0] || Object.keys(topicDetails)[0];
+}
+
+function renderContentError(error){
+  console.error(error);
+  const page = document.querySelector(".pageBody");
+  if(page){
+    page.innerHTML = `<main class="layout"><section class="center"><div class="centerBody"><div class="card orange"><div class="cardTitle">Content Load Error</div><div class="practiceBox">${escapeHtml(error.message || error)}</div></div></div></section></main>`;
+  }
+  toast("Could not load learning content.");
+}
+
+const SEARCH_ENGINE_STORAGE_KEY = "aiNavigatorSearchEngineV1";
+const searchEngines = [
+  {id:"duckduckgo", label:"DuckDuckGo", note:"Private general search", searchUrl:"https://duckduckgo.com/?q=", videoSuffix:"&iax=videos&ia=videos"},
+  {id:"brave", label:"Brave Search", note:"Private independent index", searchUrl:"https://search.brave.com/search?q="},
+  {id:"startpage", label:"Startpage", note:"Private Google-style results", searchUrl:"https://www.startpage.com/do/search?query="},
+  {id:"qwant", label:"Qwant", note:"Private European search", searchUrl:"https://www.qwant.com/?q="},
+  {id:"mojeek", label:"Mojeek", note:"Independent web index", searchUrl:"https://www.mojeek.com/search?q="},
+  {id:"ecosia", label:"Ecosia", note:"General search", searchUrl:"https://www.ecosia.org/search?q="},
+  {id:"bing", label:"Bing", note:"General search", searchUrl:"https://www.bing.com/search?q="},
+  {id:"google", label:"Google", note:"General search", searchUrl:"https://www.google.com/search?q="}
+];
+const TRAINER_RANGE_STORAGE_KEY = "aiNavigatorTrainerRangeV1";
+const TRAINER_RANGE_LABELS = [
+  "No notes",
+  "Last note",
+  "Last 2 notes",
+  "Last 3 notes",
+  "Last 4 notes",
+  "Last 5 notes",
+  "Last 6 notes",
+  "Last 7 notes",
+  "Last 8 notes",
+  "Last 9 notes",
+  "Last 10 notes",
+  "Today's notes",
+  "This week's notes",
+  "This month's notes",
+  "Last 2 months",
+  "Last 3 months",
+  "Last 6 months",
+  "Last 1 year",
+  "All notes"
+];
+const TRAINER_LAST_COUNT_MAX = 10;
+const TRAINER_TODAY_RANGE = 11;
+const TRAINER_WEEK_RANGE = 12;
+const TRAINER_MONTH_RANGE = 13;
+const TRAINER_TWO_MONTHS_RANGE = 14;
+const TRAINER_THREE_MONTHS_RANGE = 15;
+const TRAINER_SIX_MONTHS_RANGE = 16;
+const TRAINER_YEAR_RANGE = 17;
+const TRAINER_ALL_RANGE = TRAINER_RANGE_LABELS.length - 1;
+const TRAINER_API_URL = "https://ourstuff.space/api/openrouter";
+const TRAINER_NOTE_SOURCE = "ai_trainer";
+const TRAINER_NOTE_MARKER = "ai:trainer-note";
+const TRAINER_PROMPT = [
+  "You are the user's AI learning trainer.",
+  "Help the user work through their AI learning notes, current lesson path, tasklist progress, vocabulary, people, and books.",
+  "Be practical, direct, and forward-looking.",
+  "Use the notes as evidence. Call out what they seem to understand, what is missing, and the next smallest useful move.",
+  "Prefer black box thinking, first principles, 5W2H, and mini essay structure when useful.",
+  "Keep the response concise: no more than four short sections or bullets."
+].join(" ");
+
+let state = {
+  pathId:"beginner",
+  topicId:"what-is-ai",
+  notes: loadNotes(),
+  editingId:null,
+  taskDone: loadTaskDone(),
+  drawerTab:null,
+  notesView:"list",
+  themeId: loadThemeId(),
+  searchEngineId: loadSearchEngine(),
+  trainerRange: loadTrainerRange(),
+  trainerResponse:null,
+  trainerBusy:false
+};
+
+let trainerAbortController = null;
+
+function $(id){return document.getElementById(id)}
+function uid(){return `${Date.now()}-${Math.random().toString(16).slice(2)}`}
+function now(){return new Date().toLocaleString()}
+function enc(s){return encodeURIComponent(s)}
+function loadThemeId(){try{return localStorage.getItem(THEME_STORAGE_KEY) || DEFAULT_THEME_ID}catch{return DEFAULT_THEME_ID}}
+function saveThemeId(){try{localStorage.setItem(THEME_STORAGE_KEY, state.themeId)}catch{}}
+function loadSearchEngine(){try{return localStorage.getItem(SEARCH_ENGINE_STORAGE_KEY) || "duckduckgo"}catch{return "duckduckgo"}}
+function saveSearchEngine(){localStorage.setItem(SEARCH_ENGINE_STORAGE_KEY, state.searchEngineId)}
+function currentSearchEngine(){return searchEngines.find(engine=>engine.id===state.searchEngineId) || searchEngines[0]}
+function cleanQuery(q){return String(q || "").replace(/\s+/g, " ").trim()}
+function searchUrl(q, options={}){
+  const engine = currentSearchEngine();
+  let query = cleanQuery(q);
+  if(options.video && !engine.videoSuffix) query = cleanQuery(`${query} video`);
+  return `${engine.searchUrl}${enc(query)}${options.video && engine.videoSuffix ? engine.videoSuffix : ""}`;
+}
+function generalSearch(q){return searchUrl(q)}
+function videoSearch(q){return searchUrl(q, {video:true})}
+function bookSearch(q){return searchUrl(`${q} book Open Library Internet Archive`)}
+function hostLabel(url){try{return new URL(url).hostname.replace(/^www\./, "")}catch{return ""}}
+function loadTrainerRange(){try{return normalizeTrainerRange(localStorage.getItem(TRAINER_RANGE_STORAGE_KEY) ?? "3")}catch{return 3}}
+function saveTrainerRange(){localStorage.setItem(TRAINER_RANGE_STORAGE_KEY, String(state.trainerRange))}
+function normalizeTrainerRange(value){
+  const num = Number(value);
+  if(!Number.isFinite(num)) return 3;
+  return Math.max(0, Math.min(TRAINER_ALL_RANGE, Math.round(num)));
+}
+function currentPath(){return paths.find(p=>p.id===state.pathId)}
+function currentTopic(){return topicDetails[state.topicId]}
+function saveNotes(){localStorage.setItem("aiNavigatorNotesV2", JSON.stringify(state.notes))}
+function loadNotes(){try{return JSON.parse(localStorage.getItem("aiNavigatorNotesV2")||"[]")}catch{return []}}
+function saveTaskDone(){localStorage.setItem("aiNavigatorTaskDoneV1", JSON.stringify(state.taskDone))}
+function loadTaskDone(){try{return JSON.parse(localStorage.getItem("aiNavigatorTaskDoneV1")||"{}")}catch{return {}}}
+function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2200)}
+function escapeHtml(str){return String(str||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+
+function render(){
+  renderPaths();
+  renderTopics();
+  renderMain();
+  renderResources();
+  renderNotes();
+  renderSideLists();
+  renderSettings();
+  renderTrainer();
+  renderDrawer();
+  $("statusPath").textContent = `${currentPath().title} → ${currentTopic().title}`;
+}
+
+function renderPaths(){
+  $("pathbar").innerHTML = paths.map(p => `
+    <button class="pathBtn ${p.id===state.pathId?'active':''}" data-path="${p.id}">
+      <span class="tag">${p.label}</span>
+      <div class="pathTitle">${p.title}</div>
+      <div class="pathSummary">${p.summary}</div>
+    </button>
+  `).join("");
+  document.querySelectorAll("[data-path]").forEach(btn => {
+    btn.onclick = () => {
+      setPath(btn.dataset.path);
+    };
+  });
+}
+
+function renderTopics(){
+  const p = currentPath();
+  $("topicCount").textContent = `${p.topics.length} topics`;
+  $("topicList").innerHTML = p.topics.map((id, i) => {
+    const t = topicDetails[id];
+    return `
+      <button class="topicBtn ${id===state.topicId?'active':''}" data-topic="${id}">
+        <span class="num">${String(i+1).padStart(2,"0")}</span>
+        <span class="topicText">
+          <span class="topicTitleText">${escapeHtml(t.title)}</span>
+          <span class="topicMeta">${escapeHtml(t.level)}</span>
+        </span>
+      </button>
+    `;
+  }).join("");
+  document.querySelectorAll("[data-topic]").forEach(btn => {
+    btn.onclick = () => {
+      setTopic(btn.dataset.topic);
+    };
+  });
+}
+
+function renderMain(){
+  const p = currentPath();
+  const t = currentTopic();
+  $("currentPathLabel").textContent = `${p.title} / ${p.label}`;
+  $("topicTitle").textContent = t.title;
+  $("topicLevel").textContent = `${t.level} — Goal: ${t.goal}`;
+  $("topicSummary").textContent = t.summary;
+  $("topicWhy").textContent = t.why;
+  $("stepList").innerHTML = t.steps.map((s,i)=>{
+    const done = isTaskDone(state.topicId, i);
+    return `<li><button class="taskBtn ${done?'done':''}" data-task-index="${i}" aria-pressed="${done}">
+      <span class="taskCheck"></span>
+      <span><b>${i+1}.</b> ${escapeHtml(s)}</span>
+    </button></li>`;
+  }).join("");
+  document.querySelectorAll("[data-task-index]").forEach(btn=>{
+    btn.onclick=()=>toggleTaskDone(Number(btn.dataset.taskIndex));
+  });
+  $("terms").innerHTML = t.terms.map(term=>`<button class="termBtn" data-term="${escapeHtml(term)}">${escapeHtml(term)}</button>`).join("");
+  document.querySelectorAll("[data-term]").forEach(btn=>{
+    btn.onclick=async()=>{
+      await loadTermDefinition(btn.dataset.term, btn);
+    };
+  });
+  $("practiceBox").textContent = t.practice;
+}
+
+function resourceCards(){
+  const t = currentTopic();
+  const p = currentPath();
+  const base = `${t.title} ${p.title}`;
+  return [
+    {label:"Start Here", desc:"Best first click: beginner videos for this topic.", href:videoSearch(`${t.query} ${p.label} beginner AI`), cls:"green"},
+    {label:"Official Source", desc:t.officialLabel, href:generalSearch(`${t.officialLabel} ${t.title} official AI ${hostLabel(t.official)}`), cls:"blue"},
+    {label:"Find Examples", desc:"Practical examples and walkthroughs.", href:generalSearch(`${base} examples beginner AI`), cls:"cream"},
+    {label:"Search Lectures", desc:"Talks, courses, and explainers.", href:videoSearch(`${t.title} lecture tutorial explained AI`), cls:""},
+    {label:"People Search", desc:"Find credible voices for this area.", href:generalSearch(`${peopleBank[t.people][0].name} ${t.title} AI profile talks social media`), cls:"pink"},
+    {label:"Book Lookup", desc:"Book search tuned to this topic.", href:bookSearch(`${t.title} artificial intelligence ${p.label}`), cls:"cream"},
+    {label:"Glossary", desc:"Define the words around this topic.", href:generalSearch(`${t.title} AI glossary terms beginner`), cls:""},
+    {label:"Practice Ideas", desc:"Find exercises, demos, or projects.", href:generalSearch(`${t.title} practice exercise project beginner AI`), cls:"orange"}
+  ];
+}
+
+function renderResources(){
+  $("resourceGrid").innerHTML = resourceCards().map((r,idx)=>{
+    const attrs = r.action ? `href="#" data-resource-action="${r.action}"` : `href="${r.href}" target="_blank" rel="noreferrer"`;
+    return `<a class="resourceBtn ${r.cls}" ${attrs}><strong>${escapeHtml(r.label)}</strong><span>${escapeHtml(r.desc)}</span></a>`;
+  }).join("");
+}
+
+function renderSideLists(){
+  const t = currentTopic();
+  const people = peopleBank[t.people];
+  const books = bookBank[t.books];
+  $("peopleList").innerHTML = people.map((p,i)=>`
+    <div class="linkItem ${i===0?'green':''}">
+      <span>
+        <b>${escapeHtml(p.name)}</b><br>
+        <span class="muted">${escapeHtml(p.why)}</span><br>
+        <span>${escapeHtml(p.creates || "AI work, writing, talks, and public learning material")}</span>
+      </span>
+      <span class="socialRow">${socialButtons(p)}</span>
+    </div>
+  `).join("");
+  $("bookList").innerHTML = books.map((b,i)=>`
+    <a class="linkItem ${i===0?'blue':''}" href="${bookSearch(`${b.title} ${b.author} ${t.title} AI`)}" target="_blank" rel="noreferrer">
+      <span><b>${escapeHtml(b.title)}</b><br><span class="muted">${escapeHtml(b.author)} — ${escapeHtml(b.level)}</span></span>
+      <span>→</span>
+    </a>
+  `).join("");
+}
+
+function socialButtons(p){
+  return (p.socials || []).map(s=>`
+    <a class="socialPill" href="${generalSearch(`${p.name} ${s.label} ${hostLabel(s.url)} AI official profile social media`)}" target="_blank" rel="noreferrer">${escapeHtml(s.label)}</a>
+  `).join("") || `<a class="socialPill" href="${generalSearch(`${p.name} AI official profile social media`)}" target="_blank" rel="noreferrer">Search</a>`;
+}
+
+function renderSettings(){
+  const list = $("searchEngineList");
+  if(!list) return;
+  const current = currentSearchEngine();
+  const theme = currentTheme();
+  list.innerHTML = `
+    <section class="settingsCategory" aria-labelledby="searchEngineSettingsTitle">
+      <div class="settingsCategoryHead">
+        <div>
+          <span class="settingsTitle" id="searchEngineSettingsTitle">Search Engine</span>
+          <span class="muted">Used by Quick Links, people, books, and fallback definition searches.</span>
+        </div>
+        <span class="settingsCurrent">${escapeHtml(current.label)}</span>
+      </div>
+      <div class="settingsRadioGroup" role="radiogroup" aria-labelledby="searchEngineSettingsTitle">
+        ${searchEngines.map(engine=>`
+          <label class="settingsOption ${engine.id===current.id?'active':''}">
+            <input type="radio" name="searchEngine" value="${escapeHtml(engine.id)}" ${engine.id===current.id?'checked':''} />
+            <span><strong>${escapeHtml(engine.label)}</strong><span class="muted">${escapeHtml(engine.note)}</span></span>
+          </label>
+        `).join("")}
+      </div>
+    </section>
+    <section class="settingsCategory" aria-labelledby="themeSettingsTitle">
+      <div class="settingsCategoryHead">
+        <div>
+          <span class="settingsTitle" id="themeSettingsTitle">Theme</span>
+          <span class="muted">Visual preset for this site.</span>
+        </div>
+        <span class="settingsCurrent">${escapeHtml(theme.label)}</span>
+      </div>
+      <label class="settingsField" for="themePresetSelect">
+        <span class="muted">Keep the Field Guide default or switch to the Monokai dark preset.</span>
+        <select class="settingsSelect" id="themePresetSelect">
+          ${themePresetList.map(preset=>`
+            <option value="${escapeHtml(preset.id)}" ${preset.id===theme.id?'selected':''}>${escapeHtml(preset.label)}</option>
+          `).join("")}
+        </select>
+      </label>
+    </section>
+  `;
+  document.querySelectorAll('input[name="searchEngine"]').forEach(input=>{
+    input.onchange=()=>{if(input.checked)setSearchEngine(input.value);};
+  });
+  const themeSelect = $("themePresetSelect");
+  if(themeSelect) themeSelect.onchange=()=>setThemePreset(themeSelect.value);
+}
+
+function setSearchEngine(id){
+  if(!searchEngines.some(engine=>engine.id===id)) return;
+  state.searchEngineId = id;
+  saveSearchEngine();
+  renderResources();
+  renderSideLists();
+  renderSettings();
+  toast(`${currentSearchEngine().label} selected for lookups.`);
+}
+
+function setThemePreset(id){
+  if(!themePresets[id]) return;
+  state.themeId = id;
+  saveThemeId();
+  applyThemeColors();
+  renderSettings();
+  toast(`${currentTheme().label} theme selected.`);
+}
+
+function parseNoteDateMs(note){
+  const direct = Number(note.createdAtMs || note.updatedAtMs || 0);
+  if(Number.isFinite(direct) && direct > 0) return direct;
+  const parsed = Date.parse(note.createdAt || note.updatedAt || "");
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function trainerRangeCutoff(range){
+  const d = new Date();
+  if(range === TRAINER_TODAY_RANGE){
+    d.setHours(0,0,0,0);
+    return d.getTime();
+  }
+  if(range === TRAINER_WEEK_RANGE){
+    d.setDate(d.getDate() - 7);
+    return d.getTime();
+  }
+  if(range === TRAINER_MONTH_RANGE){
+    d.setMonth(d.getMonth() - 1);
+    return d.getTime();
+  }
+  if(range === TRAINER_TWO_MONTHS_RANGE){
+    d.setMonth(d.getMonth() - 2);
+    return d.getTime();
+  }
+  if(range === TRAINER_THREE_MONTHS_RANGE){
+    d.setMonth(d.getMonth() - 3);
+    return d.getTime();
+  }
+  if(range === TRAINER_SIX_MONTHS_RANGE){
+    d.setMonth(d.getMonth() - 6);
+    return d.getTime();
+  }
+  if(range === TRAINER_YEAR_RANGE){
+    d.setFullYear(d.getFullYear() - 1);
+    return d.getTime();
+  }
+  return null;
+}
+
+function getNotesForTrainer(rangeOverride = null){
+  const range = normalizeTrainerRange(rangeOverride === null ? state.trainerRange : rangeOverride);
+  if(range === 0 || !state.notes.length) return [];
+  const sorted = [...state.notes]
+    .filter(n=>!n.archived)
+    .sort((a,b)=>parseNoteDateMs(b)-parseNoteDateMs(a));
+  if(range >= 1 && range <= TRAINER_LAST_COUNT_MAX) return sorted.slice(0, range);
+  if(range === TRAINER_ALL_RANGE) return sorted;
+  const cutoff = trainerRangeCutoff(range);
+  if(cutoff === null) return sorted;
+  return sorted.filter(n=>parseNoteDateMs(n) >= cutoff);
+}
+
+function taskProgressForTopic(topicId){
+  const t = topicDetails[topicId];
+  const done = new Set(state.taskDone[topicId] || []);
+  return {
+    done: t.steps.filter((_,i)=>done.has(i)),
+    remaining: t.steps.filter((_,i)=>!done.has(i))
+  };
+}
+
+function compactAIContext(obj){
+  function strip(val){
+    if(val === null || val === undefined) return undefined;
+    if(typeof val === "string" && !val.trim()) return undefined;
+    if(Array.isArray(val)){
+      const arr = val.map(strip).filter(v=>v !== undefined);
+      return arr.length ? arr : undefined;
+    }
+    if(typeof val === "object"){
+      const out = {};
+      for(const [k,v] of Object.entries(val)){
+        const cleaned = strip(v);
+        if(cleaned !== undefined) out[k] = cleaned;
+      }
+      return Object.keys(out).length ? out : undefined;
+    }
+    return val;
+  }
+  return JSON.stringify(strip(obj) || {});
+}
+
+function buildTrainerContext(question = "", mode = "question"){
+  const t = currentTopic();
+  const p = currentPath();
+  const selectedNotes = getNotesForTrainer();
+  const taskProgress = taskProgressForTopic(state.topicId);
+  const people = peopleBank[t.people] || [];
+  const books = bookBank[t.books] || [];
+  return {
+    mode,
+    question: question || null,
+    currentPath: {id:p.id, label:p.label, title:p.title, summary:p.summary},
+    currentTopic: {
+      id:state.topicId,
+      title:t.title,
+      level:t.level,
+      summary:t.summary,
+      why:t.why,
+      goal:t.goal,
+      terms:t.terms,
+      practice:t.practice
+    },
+    tasklist: taskProgress,
+    rangeLabel: TRAINER_RANGE_LABELS[state.trainerRange],
+    notes: selectedNotes.map(n=>({
+      title:n.title,
+      type:n.type,
+      scope:scopeLabel(n),
+      createdAt:n.createdAt || null,
+      isTrainerNote:n.metadata?.source === TRAINER_NOTE_SOURCE || n.metadata?.marker === TRAINER_NOTE_MARKER,
+      body:n.body
+    })),
+    peopleToLookAt: people.map(person=>({name:person.name, why:person.why, creates:person.creates})),
+    booksToRead: books.map(book=>({title:book.title, author:book.author, level:book.level}))
+  };
+}
+
+function renderTrainer(){
+  const rangeInput = $("trainerNotesRange");
+  if(!rangeInput) return;
+  const selectedNotes = getNotesForTrainer();
+  rangeInput.max = TRAINER_ALL_RANGE;
+  rangeInput.value = state.trainerRange;
+  $("trainerNotesRangeLabel").textContent = TRAINER_RANGE_LABELS[state.trainerRange];
+  $("trainerContextStats").textContent = `${selectedNotes.length} notes / ${currentTopic().title}`;
+  $("trainerResponse").textContent = state.trainerResponse?.text || "Ask a question or generate a trainer note. The trainer uses your current path, topic, tasklist, and selected notes.";
+  $("trainerAskBtn").disabled = state.trainerBusy;
+  $("trainerNoteBtn").disabled = state.trainerBusy;
+  $("trainerCancelBtn").disabled = !state.trainerBusy;
+  $("trainerSaveResponseBtn").disabled = state.trainerBusy || !state.trainerResponse?.text;
+}
+
+async function callTrainerLLM({question, mode, signal}){
+  const userPrompt = compactAIContext(buildTrainerContext(question, mode));
+  const response = await fetch(TRAINER_API_URL, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      purpose:"learnai-trainer",
+      systemPrompt:TRAINER_PROMPT,
+      userPrompt,
+      maxTokens:900,
+      temperature:0.35
+    }),
+    signal
+  });
+  const data = await response.json().catch(()=>null);
+  if(!response.ok){
+    throw new Error(data?.error?.message || data?.message || response.statusText || "Trainer API failed");
+  }
+  const content = data?.choices?.[0]?.message?.content;
+  if(typeof content === "string") return content.trim();
+  if(Array.isArray(content)){
+    return content.map(part=>typeof part?.text === "string" ? part.text : "").join("\n").trim();
+  }
+  return "";
+}
+
+async function runTrainer(mode){
+  if(state.trainerBusy || trainerAbortController) return;
+  const question = $("trainerQuestion").value.trim();
+  if(mode === "question" && !question){
+    toast("Ask the trainer a question first.");
+    return;
+  }
+  trainerAbortController = new AbortController();
+  state.trainerBusy = true;
+  state.trainerResponse = {text:"Trainer is reading your notes...", mode, question, createdAt:now()};
+  renderTrainer();
+  try{
+    const text = await callTrainerLLM({question, mode, signal:trainerAbortController.signal});
+    if(!text){
+      toast("No trainer response returned.");
+      state.trainerResponse = null;
+    }else{
+      state.trainerResponse = {text, mode, question, createdAt:now()};
+      toast("Trainer response ready.");
+    }
+  }catch(error){
+    if(error?.name === "AbortError"){
+      toast("Trainer request cancelled.");
+    }else{
+      state.trainerResponse = {text:`Trainer API error:\n\n${error.message}\n\nCheck that OPENROUTER_API_KEY is set on the Cloudflare Worker and that /api/openrouter is deployed.`, mode, question, createdAt:now()};
+      toast("Trainer API failed.");
+    }
+  }finally{
+    trainerAbortController = null;
+    state.trainerBusy = false;
+    renderTrainer();
+  }
+}
+
+function cancelTrainer(){
+  if(trainerAbortController) trainerAbortController.abort();
+}
+
+function saveTrainerResponseAsNote(){
+  const response = state.trainerResponse;
+  if(!response?.text){
+    toast("No trainer response to save.");
+    return;
+  }
+  const prefix = response.mode === "question" && response.question ? `Question: ${response.question}\n\n` : "";
+  state.notes.unshift({
+    id:uid(),
+    title:`Trainer: ${currentTopic().title}`,
+    body:`${prefix}${response.text}`,
+    type:"Trainer",
+    scope:"topic",
+    pathId:state.pathId,
+    topicId:state.topicId,
+    pinned:false,
+    archived:false,
+    metadata:{
+      source:TRAINER_NOTE_SOURCE,
+      marker:TRAINER_NOTE_MARKER,
+      readOnly:true,
+      contentFormat:"markdown"
+    },
+    createdAt:now(),
+    createdAtMs:Date.now(),
+    updatedAt:null
+  });
+  saveNotes();
+  renderNotes();
+  renderTrainer();
+  toast("Trainer note saved.");
+}
+
+function isTaskDone(topicId, index){
+  return Boolean(state.taskDone[topicId]?.includes(index));
+}
+
+function toggleTaskDone(index){
+  const list = new Set(state.taskDone[state.topicId] || []);
+  if(list.has(index)) list.delete(index); else list.add(index);
+  state.taskDone[state.topicId] = [...list].sort((a,b)=>a-b);
+  saveTaskDone();
+  renderMain();
+}
+
+function setPath(pathId){
+  state.pathId = pathId;
+  state.topicId = currentPath().topics[0];
+  state.editingId = null;
+  clearNoteForm();
+  render();
+}
+
+function setTopic(topicId){
+  state.topicId = topicId;
+  state.editingId = null;
+  clearNoteForm();
+  render();
+}
+
+function noteTemplateBody(kind){
+  const t = currentTopic();
+  const base = `${t.title} / ${currentPath().title}`;
+  const templates = {
+    blackbox:`Black box thinking - ${base}\n\nInput:\n\nWhat happened:\n\nExpected output:\n\nActual output:\n\nWhat could explain the gap:\n\nWhat I would test next:\n\nWhat changed after testing:`,
+    firstprinciples:`First principles - ${base}\n\nWhat do I know is true:\n\nWhat assumptions am I making:\n\nWhat can be broken into smaller parts:\n\nWhat follows from those parts:\n\nWhat is the simplest useful explanation:`,
+    "5w2h":`5W2H - ${base}\n\nWho is involved:\n\nWhat is the idea/task/problem:\n\nWhen does it matter:\n\nWhere does it show up:\n\nWhy does it matter:\n\nHow does it work:\n\nHow much / how many / how often:`,
+    miniessay:`Mini essay - ${base}\n\nIntro:\nState the main idea in plain English.\n\nBody:\nExplain the idea, include one example, and connect it to ${t.title}.\n\nConclusion:\nSay what matters most and what still needs to be checked.`
+  };
+  return templates[kind] || "";
+}
+
+function startTemplate(kind){
+  const names = {blackbox:"Black Box", firstprinciples:"First Principles", "5w2h":"5W2H", miniessay:"Mini Essay"};
+  prefillNote("Example", `${currentTopic().title} ${names[kind] || "template"}`, noteTemplateBody(kind));
+  toast(`${names[kind]} note started.`);
+}
+
+function aiDefinitionSearch(term){
+  const t = currentTopic();
+  return `${term} artificial intelligence ${t.title} machine learning`;
+}
+
+const aiDefinitionPages = {
+  model:"Machine learning",
+  prediction:"Predictive modelling",
+  training:"Training, validation, and test data sets",
+  inference:"Statistical inference",
+  automation:"Automation",
+  dataset:"Data set",
+  label:"Labeled data",
+  overfitting:"Overfitting",
+  generation:"Generative artificial intelligence",
+  prompt:"Prompt engineering",
+  token:"Large language model",
+  hallucination:"Hallucination (artificial intelligence)",
+  embedding:"Word embedding",
+  embeddings:"Word embedding",
+  vector:"Vector space model",
+  "semantic search":"Semantic search",
+  retrieval:"Information retrieval",
+  rag:"Retrieval-augmented generation",
+  "retrieval-augmented generation":"Retrieval-augmented generation",
+  "foundation model":"Foundation model",
+  "foundation models":"Foundation model",
+  "generative ai":"Generative artificial intelligence",
+  "large language models":"Large language model",
+  llms:"Large language model",
+  "machine learning":"Machine learning",
+  "artificial intelligence":"Artificial intelligence",
+  "responsible ai":"Ethics of artificial intelligence",
+  bias:"Algorithmic bias",
+  "source grounding":"Retrieval-augmented generation",
+  "context window":"Large language model",
+  "tool use":"Intelligent agent",
+  agents:"Intelligent agent",
+  "ai agents":"Intelligent agent"
+};
+
+async function loadTermDefinition(term, btn){
+  const original = btn.textContent;
+  btn.textContent = "Loading...";
+  btn.disabled = true;
+  try{
+    const result = await fetchAiDefinition(term);
+    const body = result
+      ? `AI-focused definition of ${term}:\n\n${result.definition}\n\nSource: ${result.source}\n${result.url}\n\nWhere it appears in ${currentTopic().title}:\n\nExample:`
+      : `AI-focused definition of ${term}:\n\nNo direct public definition loaded yet. Use this search and write the plain-English definition after checking sources:\n${generalSearch(aiDefinitionSearch(term))}\n\nWhere it appears in ${currentTopic().title}:\n\nExample:`;
+    prefillNote("Definition", `${term} definition`, body);
+    toast(result ? "AI term definition loaded." : "Definition search note started.");
+  }catch{
+    prefillNote("Definition", `${term} definition`, `AI-focused definition of ${term}:\n\nSearch: ${generalSearch(aiDefinitionSearch(term))}\n\nWhere it appears in ${currentTopic().title}:\n\nExample:`);
+    toast("Definition lookup failed; search note started.");
+  }finally{
+    btn.textContent = original;
+    btn.disabled = false;
+  }
+}
+
+async function fetchAiDefinition(term){
+  const wiki = await fetchWikipediaDefinition(term);
+  if(wiki) return wiki;
+  return null;
+}
+
+async function fetchWikipediaDefinition(term){
+  const mappedTitle = aiDefinitionPages[term.toLowerCase()];
+  const candidateTitles = [
+    mappedTitle,
+    `${term} (machine learning)`,
+    `${term} (artificial intelligence)`,
+    `${term} (computer science)`
+  ].filter(Boolean);
+  for(const title of candidateTitles){
+    const summary = await fetchWikiSummary(title);
+    if(summary) return summary;
+  }
+  const searchUrl = `https://en.wikipedia.org/w/api.php?action=opensearch&origin=*&limit=1&namespace=0&format=json&search=${enc(aiDefinitionSearch(term))}`;
+  const search = await fetch(searchUrl).then(r=>r.ok?r.json():null).catch(()=>null);
+  const title = search?.[1]?.[0];
+  if(!title) return null;
+  return fetchWikiSummary(title);
+}
+
+async function fetchWikiSummary(title){
+  const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${enc(title)}`;
+  const summary = await fetch(summaryUrl).then(r=>r.ok?r.json():null).catch(()=>null);
+  if(!summary?.extract) return null;
+  return {definition:summary.extract, source:`Wikipedia: ${summary.title || title}`, url:summary.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${enc(title)}`};
+}
+
+function renderDrawer(){
+  updateLayoutMetrics();
+  const drawerPaths = [...paths].reverse();
+  const drawerTopics = currentPath().topics
+    .map((id,index)=>({id,index}))
+    .reverse();
+  $("drawerLessons").innerHTML = `<div class="drawerGrid">${drawerPaths.map(p => `
+    <button class="pathBtn ${p.id===state.pathId?'active':''}" data-drawer-path="${p.id}">
+      <span class="tag">${p.label}</span>
+      <div class="pathTitle">${p.title}</div>
+      <div class="pathSummary">${p.summary}</div>
+    </button>
+  `).join("")}</div>`;
+  $("drawerTopics").innerHTML = `<div class="drawerTopics">${drawerTopics.map(({id,index})=>{
+    const t = topicDetails[id];
+    return `<button class="topicBtn ${id===state.topicId?'active':''}" data-drawer-topic="${id}">
+      <span class="num">${String(index+1).padStart(2,"0")}</span>
+      <span class="topicText"><span class="topicTitleText">${escapeHtml(t.title)}</span><span class="topicMeta">${escapeHtml(t.level)}</span></span>
+    </button>`;
+  }).join("")}</div>`;
+  document.querySelectorAll("[data-drawer-path]").forEach(btn=>btn.onclick=()=>{setPath(btn.dataset.drawerPath);openDrawer("topics");});
+  document.querySelectorAll("[data-drawer-topic]").forEach(btn=>btn.onclick=()=>{setTopic(btn.dataset.drawerTopic);closeDrawer();});
+  $("drawerLessons").classList.toggle("hiddenPanel", state.drawerTab !== "lessons");
+  $("drawerTopics").classList.toggle("hiddenPanel", state.drawerTab !== "topics");
+  $("drawerNotes").classList.toggle("hiddenPanel", state.drawerTab !== "notes");
+  $("drawerTrainer").classList.toggle("hiddenPanel", state.drawerTab !== "trainer");
+  $("drawerSettings").classList.toggle("hiddenPanel", state.drawerTab !== "settings");
+  renderNotesView();
+  renderTrainer();
+  $("bottomDrawer").classList.toggle("open", Boolean(state.drawerTab));
+  $("bottomDrawer").setAttribute("aria-hidden", state.drawerTab ? "false" : "true");
+  $("lessonsNavBtn").classList.toggle("active", state.drawerTab === "lessons");
+  $("topicsNavBtn").classList.toggle("active", state.drawerTab === "topics");
+  $("notesNavBtn").classList.toggle("active", state.drawerTab === "notes");
+  $("trainerNavBtn").classList.toggle("active", state.drawerTab === "trainer");
+  $("settingsNavBtn").classList.toggle("active", state.drawerTab === "settings");
+}
+
+function openDrawer(tab){
+  state.drawerTab = state.drawerTab === tab ? null : tab;
+  if(state.drawerTab === "notes") state.notesView = "list";
+  renderDrawer();
+}
+
+function closeDrawer(){
+  state.drawerTab = null;
+  renderDrawer();
+}
+
+function showNotesList(){
+  state.notesView = "list";
+  renderNotesView();
+  renderNotes();
+  const body = document.querySelector(".drawerBody");
+  if(body) body.scrollTop = 0;
+}
+
+function showNoteEditor(){
+  state.drawerTab = "notes";
+  state.notesView = "editor";
+  renderDrawer();
+  const body = document.querySelector(".drawerBody");
+  if(body) body.scrollTop = 0;
+  $("noteTitle").focus();
+}
+
+function renderNotesView(){
+  const listView = $("notesListView");
+  const editorView = $("notesEditorView");
+  if(!listView || !editorView) return;
+  const showingEditor = state.drawerTab === "notes" && state.notesView === "editor";
+  listView.classList.toggle("hiddenPanel", showingEditor);
+  editorView.classList.toggle("hiddenPanel", !showingEditor);
+  $("bottomDrawer").classList.toggle("editorMode", showingEditor);
+}
+
+function updateLayoutMetrics(){
+  const shell = document.querySelector(".shell");
+  const masthead = document.querySelector(".masthead");
+  const menuDock = document.querySelector(".menuDock");
+  if(!shell || !masthead || !menuDock) return;
+  shell.style.setProperty("--masthead-height", `${masthead.offsetHeight}px`);
+  shell.style.setProperty("--menu-dock-height", `${menuDock.offsetHeight}px`);
+}
+
+function prefillNote(type,title,body){
+  state.drawerTab = "notes";
+  state.notesView = "editor";
+  $("noteType").value = type;
+  $("noteTitle").value = title;
+  $("noteBody").value = body;
+  $("noteScope").value = "topic";
+  state.editingId = null;
+  $("saveNoteBtn").textContent = "Save Note";
+  renderDrawer();
+}
+
+function clearNoteForm(){
+  $("noteTitle").value="";
+  $("noteBody").value="";
+  $("noteType").value="Definition";
+  $("noteScope").value="topic";
+  state.editingId=null;
+  $("saveNoteBtn").textContent="Save Note";
+}
+
+function saveNoteFromForm(){
+  const title = $("noteTitle").value.trim() || `${currentTopic().title} note`;
+  const body = $("noteBody").value.trim();
+  if(!body){toast("Write a note first.");return}
+  const type = $("noteType").value;
+  const scope = $("noteScope").value;
+  if(state.editingId){
+    const note = state.notes.find(n=>n.id===state.editingId);
+    if(note){
+      note.title=title; note.body=body; note.type=type; note.scope=scope;
+      note.updatedAt=now();
+      note.updatedAtMs=Date.now();
+      note.pathId=scope==="general" ? null : state.pathId;
+      note.topicId=scope==="topic" ? state.topicId : null;
+    }
+    toast("Note updated.");
+  }else{
+    state.notes.unshift({
+      id:uid(),
+      title, body, type, scope,
+      pathId:scope==="general" ? null : state.pathId,
+      topicId:scope==="topic" ? state.topicId : null,
+      pinned:false,
+      archived:false,
+      createdAt:now(),
+      createdAtMs:Date.now(),
+      updatedAt:null
+    });
+    toast("Note saved.");
+  }
+  saveNotes();
+  clearNoteForm();
+  renderNotes();
+  showNotesList();
+}
+
+function filteredNotes(){
+  const scope = $("filterScope").value;
+  const type = $("filterType").value;
+  return state.notes.filter(n=>{
+    if(scope==="archive"){
+      if(!n.archived) return false;
+    }else{
+      if(n.archived) return false;
+      if(scope==="topic" && n.topicId!==state.topicId) return false;
+      if(scope==="path" && !(n.pathId===state.pathId || n.topicId===state.topicId)) return false;
+    }
+    if(type!=="all" && n.type!==type) return false;
+    return true;
+  }).sort((a,b)=>Number(b.pinned)-Number(a.pinned));
+}
+
+function renderNotes(){
+  const notes = filteredNotes();
+  const totalActive = state.notes.filter(n=>!n.archived).length;
+  $("noteCount").textContent = `${totalActive} active`;
+  if(notes.length===0){
+    $("noteList").innerHTML = `
+      <div class="noteCard">
+        <div class="noteTop">
+          <div>
+            <div class="noteTitle">No notes</div>
+            <div class="noteMeta">Create one from this topic</div>
+          </div>
+        </div>
+        <div class="noteText">Use New Note, a template, or a term definition to start.</div>
+        <div class="noteActions">
+          <button class="tinyBtn" data-new-note="true">New Note</button>
+        </div>
+      </div>`;
+    document.querySelectorAll("[data-new-note]").forEach(b=>b.onclick=()=>{clearNoteForm();showNoteEditor();});
+    return;
+  }
+  $("noteList").innerHTML = notes.map(n=>`
+    <div class="noteCard ${n.pinned?'pinned':''} ${n.archived?'archived':''} ${n.metadata?.source===TRAINER_NOTE_SOURCE || n.metadata?.marker===TRAINER_NOTE_MARKER ? 'trainer' : ''}">
+      <div class="noteTop">
+        <div>
+          <div class="noteTitle">${escapeHtml(n.title)}</div>
+          <div class="noteMeta">${escapeHtml(n.type)} / ${scopeLabel(n)} / ${escapeHtml(n.createdAt)}${n.updatedAt ? " / updated " + escapeHtml(n.updatedAt) : ""}</div>
+        </div>
+        <div>${n.pinned?"★":""}</div>
+      </div>
+      <div class="noteText">${escapeHtml(n.body)}</div>
+      <div class="noteActions">
+        <button class="tinyBtn" data-edit="${n.id}">Edit</button>
+        <button class="tinyBtn" data-pin="${n.id}">${n.pinned?"Unpin":"Pin"}</button>
+        <button class="tinyBtn" data-archive="${n.id}">${n.archived?"Restore":"Archive"}</button>
+        <button class="tinyBtn" data-delete="${n.id}">Delete</button>
+      </div>
+    </div>
+  `).join("");
+  document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editNote(b.dataset.edit));
+  document.querySelectorAll("[data-pin]").forEach(b=>b.onclick=()=>toggleNote(b.dataset.pin,"pinned"));
+  document.querySelectorAll("[data-archive]").forEach(b=>b.onclick=()=>toggleNote(b.dataset.archive,"archived"));
+  document.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteNote(b.dataset.delete));
+}
+
+function scopeLabel(n){
+  if(n.scope==="general") return "general";
+  if(n.scope==="path") return paths.find(p=>p.id===n.pathId)?.title || "path";
+  if(n.scope==="topic") return topicDetails[n.topicId]?.title || "topic";
+  return "note";
+}
+
+function editNote(id){
+  const n=state.notes.find(x=>x.id===id);
+  if(!n)return;
+  state.editingId=id;
+  $("noteTitle").value=n.title;
+  $("noteBody").value=n.body;
+  $("noteType").value=n.type;
+  $("noteScope").value=n.scope;
+  $("saveNoteBtn").textContent="Update Note";
+  showNoteEditor();
+  toast("Editing note.");
+}
+
+function toggleNote(id,key){
+  const n=state.notes.find(x=>x.id===id);
+  if(!n)return;
+  n[key]=!n[key];
+  saveNotes();
+  renderNotes();
+}
+
+function deleteNote(id){
+  if(!confirm("Delete this note?"))return;
+  state.notes=state.notes.filter(n=>n.id!==id);
+  saveNotes();
+  renderNotes();
+  toast("Note deleted.");
+}
+
+function exportNotes(){
+  const blob = new Blob([JSON.stringify(state.notes,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href=url;
+  a.download="ai-learning-notes.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importNotes(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const incoming = JSON.parse(reader.result);
+      if(!Array.isArray(incoming)) throw new Error("Not an array");
+      const clean = incoming.filter(n=>n && n.title && n.body).map(n=>({...n,id:n.id||uid()}));
+      state.notes = [...clean, ...state.notes];
+      saveNotes();
+      renderNotes();
+      toast(`Imported ${clean.length} notes.`);
+    }catch(e){toast("Import failed. Expected exported notes JSON.")}
+  };
+  reader.readAsText(file);
+}
+
+async function initApp(){
+  try{
+    try{
+      await loadThemePresets();
+    }catch(themeError){
+      console.error(themeError);
+      toast("Theme presets unavailable; using default.");
+    }
+    applyThemeColors();
+    await loadLearningContent();
+    render();
+  }catch(error){
+    renderContentError(error);
+  }
+}
+
+$("saveNoteBtn").onclick=saveNoteFromForm;
+$("newNoteBtn").onclick=()=>{clearNoteForm();showNoteEditor();toast("New note ready.")};
+$("clearEditorBtn").onclick=()=>{clearNoteForm();toast("Editor cleared.")};
+$("backToNotesBtn2").onclick=showNotesList;
+$("exportNotesBtn").onclick=exportNotes;
+$("importNotesInput").onchange=(e)=>{if(e.target.files[0]) importNotes(e.target.files[0]); e.target.value=""};
+$("filterScope").onchange=renderNotes;
+$("filterType").onchange=renderNotes;
+$("showAllNotesBtn").onclick=()=>{$("filterScope").value="all";$("filterType").value="all";renderNotes();};
+$("resetBtn").onclick=()=>{state.pathId="beginner";state.topicId="what-is-ai";state.drawerTab=null;clearNoteForm();render();};
+$("addTakeawayBtn").onclick=()=>prefillNote("Definition", `${currentTopic().title} definition`, `Plain-English definition:\n\nWhy it matters:\n\nExample:\n\nRelated terms: ${currentTopic().terms.join(", ")}`);
+$("addQuestionBtn").onclick=()=>prefillNote("Confusion", `${currentTopic().title} confusion`, `What I do not understand yet:\n\nWhat I searched:\n\nWhat answer would clear this up:`);
+$("copyPracticeBtn").onclick=async()=>{
+  const text=currentTopic().practice;
+  try{await navigator.clipboard.writeText(text);toast("Practice copied.");}
+  catch{prefillNote("Practice", `${currentTopic().title} practice`, text);toast("Clipboard blocked; practice note started.")}
+};
+document.querySelectorAll("[data-template]").forEach(btn=>btn.onclick=()=>startTemplate(btn.dataset.template));
+$("lessonsNavBtn").onclick=()=>openDrawer("lessons");
+$("topicsNavBtn").onclick=()=>openDrawer("topics");
+$("notesNavBtn").onclick=()=>{
+  openDrawer("notes");
+};
+$("trainerNavBtn").onclick=()=>openDrawer("trainer");
+$("trainerNotesRange").oninput=(e)=>{
+  state.trainerRange = normalizeTrainerRange(e.target.value);
+  saveTrainerRange();
+  renderTrainer();
+};
+$("trainerAskBtn").onclick=()=>runTrainer("question");
+$("trainerNoteBtn").onclick=()=>runTrainer("note");
+$("trainerCancelBtn").onclick=cancelTrainer;
+$("trainerSaveResponseBtn").onclick=saveTrainerResponseAsNote;
+$("settingsNavBtn").onclick=()=>openDrawer("settings");
+window.addEventListener("resize", updateLayoutMetrics);
+if("ResizeObserver" in window){
+  const layoutObserver = new ResizeObserver(updateLayoutMetrics);
+  layoutObserver.observe(document.querySelector(".masthead"));
+  layoutObserver.observe(document.querySelector(".menuDock"));
+}
+
+initApp();
+</script>
+</body>
+</html>

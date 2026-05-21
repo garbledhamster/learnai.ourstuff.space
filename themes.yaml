@@ -1,0 +1,43 @@
+- id: fieldGuide
+  label: Field Guide
+  colors:
+    primaryColor: "#d7ff35"
+    secondaryColor: "#151515"
+    backgroundColor: "#d8c7a3"
+    surfaceColor: "#ffffff"
+    surfaceMutedColor: "#1f3d2b"
+    borderColor: "#000000"
+    textColor: "#151515"
+    textMutedColor: "#5f6368"
+    dangerColor: "#b42318"
+    cardColor: "#ffffff"
+    shadowColor: "#000000"
+    accentTextColor: "#151515"
+    bodyBackgroundColor: "#ffffff"
+    bodySoftColor: "#f4f4f4"
+    bodySofterColor: "#fafafa"
+    referenceColor: "#9ed8ff"
+    practiceColor: "#ffb84d"
+    peopleColor: "#e8ddff"
+
+- id: monokai
+  label: Monokai (Dark)
+  colors:
+    primaryColor: "#a6e22e"
+    secondaryColor: "#66d9ef"
+    backgroundColor: "#272822"
+    surfaceColor: "#2d2e28"
+    surfaceMutedColor: "#34352f"
+    borderColor: "#75715e"
+    textColor: "#f8f8f2"
+    textMutedColor: "#a1a1a1"
+    dangerColor: "#f92672"
+    cardColor: "#2d2e28"
+    shadowColor: "#11120f"
+    accentTextColor: "#272822"
+    bodyBackgroundColor: "#272822"
+    bodySoftColor: "#34352f"
+    bodySofterColor: "#3e3d32"
+    referenceColor: "#66d9ef"
+    practiceColor: "#fd971f"
+    peopleColor: "#ae81ff"
