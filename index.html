@@ -197,7 +197,7 @@
       gap:8px;
       align-items:start;
     }
-    .topicBtn.active{background:var(--line);color:var(--card-bg);box-shadow:inset 8px 0 0 var(--accent)}
+    .topicBtn.active{background:var(--line);color:#ffffff;box-shadow:inset 8px 0 0 var(--accent)}
     .num{font-weight:900}
     .topicText{
       min-width:0;
@@ -704,21 +704,25 @@
     .drawerGrid .pathBtn{
       min-height:0;
       border:2px solid var(--line);
-      padding:8px 10px;
+      padding:10px 14px;
       display:grid;
       grid-template-columns:96px 1fr;
       align-items:center;
-      gap:10px;
+      gap:12px;
     }
-    .drawerGrid .pathBtn.active{background:linear-gradient(90deg,var(--accent) 0 10px,var(--card-bg) 10px 100%)}
+    .drawerGrid .pathBtn.active{
+      background:linear-gradient(90deg,var(--accent) 0 12px,var(--card-bg) 12px 100%);
+      padding-left:18px;
+    }
     .drawerGrid .tag{margin-bottom:0;text-align:center}
     .drawerGrid .pathSummary{display:none}
     .drawerGrid .pathTitle{font-size:14px}
     .drawerTopics .topicBtn{
       min-height:0;
-      padding:9px 11px;
-      grid-template-columns:46px 1fr;
+      padding:12px 16px;
+      grid-template-columns:54px 1fr;
       align-items:center;
+      gap:14px;
     }
     .trainerPanel{
       width:min(100%, 980px);
@@ -840,8 +844,10 @@
     }
     .settingsOption.active{
       background:var(--cream);
-      color:var(--surface-color);
+      color:#ffffff;
     }
+    .settingsOption.active strong,
+    .settingsOption.active .muted{color:#ffffff}
     .settingsOption.active .muted{opacity:.9}
     .settingsOption input{
       width:16px;
@@ -910,7 +916,15 @@
       .twoCol,.resourceGrid,.rightBody,.peopleGrid{grid-template-columns:1fr}
       .bottomNav{width:calc(100% - 16px);max-width:calc(100% - 16px)}
       .bottomNav button{font-size:12px;padding:8px 6px;min-width:0}
-      .drawerGrid .pathBtn{grid-template-columns:1fr}
+      .drawerGrid .pathBtn{
+        grid-template-columns:1fr;
+        padding:12px 16px 12px 20px;
+      }
+      .drawerGrid .pathBtn.active{padding-left:22px}
+      .drawerTopics .topicBtn{
+        grid-template-columns:44px 1fr;
+        padding:14px 16px;
+      }
       .settingsRadioGroup{grid-template-columns:1fr}
       .settingsCategoryHead{display:grid}
       .settingsCurrent{width:max-content}
