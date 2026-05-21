@@ -786,8 +786,54 @@
       background:var(--people);
       padding:10px;
       min-height:120px;
-      white-space:pre-wrap;
       font-family:var(--font-reading);
+      display:grid;
+      gap:12px;
+    }
+    .trainerParagraphs{
+      display:grid;
+      gap:10px;
+    }
+    .trainerParagraphs p{
+      margin:0;
+    }
+    .trainerLinkBlock{
+      border-top:2px solid var(--line);
+      padding-top:10px;
+      display:grid;
+      gap:8px;
+      font-family:var(--font-ui);
+    }
+    .trainerLinkTitle{
+      font-family:var(--font-display);
+      font-weight:900;
+      text-transform:uppercase;
+      font-size:12px;
+      letter-spacing:.02em;
+    }
+    .trainerLinkList{
+      display:grid;
+      gap:6px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    .trainerLinkItem a{
+      display:grid;
+      gap:3px;
+      border:2px solid var(--line);
+      background:var(--panel);
+      padding:8px 10px;
+      box-shadow:var(--shadow-sm);
+    }
+    .trainerLinkItem strong{
+      font-family:var(--font-display);
+      font-weight:900;
+      text-transform:uppercase;
+    }
+    .trainerLinkItem span{
+      font-size:12px;
+      opacity:.78;
     }
     .trainerMeta{
       display:flex;
@@ -876,17 +922,30 @@
       background:var(--panel);
       cursor:pointer;
     }
-    .settingsRange{
-      width:100%;
-      accent-color:var(--accent);
+    .settingsScaleGroup{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:6px;
     }
-    .settingsRangeMeta{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
+    .settingsScaleOption{
+      border:2px solid var(--line);
+      background:var(--panel);
+      padding:10px 8px;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
       font-size:12px;
       font-weight:900;
       text-transform:uppercase;
+    }
+    .settingsScaleOption.active{
+      background:var(--cream);
+      color:#ffffff;
+    }
+    .settingsScaleOption input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
     }
     .drawerNotesGrid{
       display:grid;
@@ -1404,9 +1463,12 @@ function renderContentError(error){
 
 const SEARCH_ENGINE_STORAGE_KEY = "aiNavigatorSearchEngineV1";
 const UI_SCALE_STORAGE_KEY = "aiNavigatorUiScaleV1";
-const DEFAULT_UI_SCALE = 200;
-const MIN_UI_SCALE = 50;
-const MAX_UI_SCALE = 260;
+const DEFAULT_UI_SCALE = 1;
+const UI_SCALE_OPTIONS = [
+  {value:0.5, label:".5x zoom", factor:0.5},
+  {value:1, label:"1x zoom", factor:0.75},
+  {value:2, label:"2x zoom", factor:1}
+];
 const searchEngines = [
   {id:"duckduckgo", label:"DuckDuckGo", note:"Private general search", searchUrl:"https://duckduckgo.com/?q=", videoSuffix:"&iax=videos&ia=videos"},
   {id:"brave", label:"Brave Search", note:"Private independent index", searchUrl:"https://search.brave.com/search?q="},
@@ -1462,7 +1524,18 @@ const TRAINER_PROMPT = [
   "Be practical, direct, and forward-looking.",
   "Use userNotes as the main evidence. Use appCourseContext only to orient the lesson and next steps.",
   "Prefer black box thinking, first principles, 5W2H, and mini essay structure when useful.",
-  "Keep the response concise: no more than four short sections or bullets."
+  "Write only plain paragraphs. Do not use markdown, headings, bullets, numbered lists, tables, code fences, or inline links.",
+  "Keep the response concise: two to four short paragraphs."
+].join(" ");
+const TRAINER_LINK_PROMPT = [
+  "You choose useful internal app links for the user's next study step.",
+  "Return only lines in this exact format: LINK|kind|id|label|reason",
+  "kind must be topic or path.",
+  "id must exactly match one availableLinks item.",
+  "label must be short, plain text, and must not contain pipes.",
+  "reason must be a short plain text reason and must not contain pipes.",
+  "Return one to four links.",
+  "Do not use markdown, JSON, prose, headings, bullets, or extra text."
 ].join(" ");
 
 let state = {
@@ -1494,11 +1567,15 @@ function saveSearchEngine(){localStorage.setItem(SEARCH_ENGINE_STORAGE_KEY, stat
 function normalizeUiScale(value){
   const num = Number(value);
   if(!Number.isFinite(num)) return DEFAULT_UI_SCALE;
-  return Math.max(MIN_UI_SCALE, Math.min(MAX_UI_SCALE, Math.round(num / 10) * 10));
+  const optionValue = num > 10 ? num / 100 : num;
+  return UI_SCALE_OPTIONS.reduce((closest, option)=>{
+    return Math.abs(option.value - optionValue) < Math.abs(closest.value - optionValue) ? option : closest;
+  }, UI_SCALE_OPTIONS[0]).value;
 }
 function loadUiScale(){try{return normalizeUiScale(localStorage.getItem(UI_SCALE_STORAGE_KEY) ?? DEFAULT_UI_SCALE)}catch{return DEFAULT_UI_SCALE}}
 function saveUiScale(){try{localStorage.setItem(UI_SCALE_STORAGE_KEY, String(state.uiScale))}catch{}}
-function uiZoomFactor(){return normalizeUiScale(state.uiScale) / 200}
+function currentUiScaleOption(){return UI_SCALE_OPTIONS.find(option=>option.value === normalizeUiScale(state.uiScale)) || UI_SCALE_OPTIONS[1]}
+function uiZoomFactor(){return currentUiScaleOption().factor}
 function applyUiScale(){
   document.documentElement.style.setProperty("--ui-zoom-factor", String(uiZoomFactor()));
   updateLayoutMetrics();
@@ -1665,6 +1742,7 @@ function renderSettings(){
   const current = currentSearchEngine();
   const theme = currentTheme();
   const uiScale = normalizeUiScale(state.uiScale);
+  const uiScaleOption = currentUiScaleOption();
   list.innerHTML = `
     <section class="settingsCategory" aria-labelledby="searchEngineSettingsTitle">
       <div class="settingsCategoryHead">
@@ -1706,16 +1784,16 @@ function renderSettings(){
           <span class="settingsTitle" id="uiScaleSettingsTitle">Interface Scale</span>
           <span class="muted">Changes the size of the app controls, cards, text, and drawer panels.</span>
         </div>
-        <span class="settingsCurrent" id="uiScaleCurrent">${uiScale}%</span>
+        <span class="settingsCurrent" id="uiScaleCurrent">${uiScaleOption.label}</span>
       </div>
-      <label class="settingsField" for="uiScaleRange">
-        <input class="settingsRange" id="uiScaleRange" type="range" min="${MIN_UI_SCALE}" max="${MAX_UI_SCALE}" step="10" value="${uiScale}" />
-        <span class="settingsRangeMeta">
-          <span>50%</span>
-          <span>100%</span>
-          <span>Larger</span>
-        </span>
-      </label>
+      <div class="settingsScaleGroup" role="radiogroup" aria-labelledby="uiScaleSettingsTitle">
+        ${UI_SCALE_OPTIONS.map(option=>`
+          <label class="settingsScaleOption ${option.value===uiScale?'active':''}">
+            <input type="radio" name="uiScale" value="${option.value}" ${option.value===uiScale?'checked':''} />
+            <span>${option.label}</span>
+          </label>
+        `).join("")}
+      </div>
     </section>
   `;
   document.querySelectorAll('input[name="searchEngine"]').forEach(input=>{
@@ -1723,8 +1801,9 @@ function renderSettings(){
   });
   const themeSelect = $("themePresetSelect");
   if(themeSelect) themeSelect.onchange=()=>setThemePreset(themeSelect.value);
-  const uiScaleRange = $("uiScaleRange");
-  if(uiScaleRange) uiScaleRange.oninput=()=>setUiScale(uiScaleRange.value);
+  document.querySelectorAll('input[name="uiScale"]').forEach(input=>{
+    input.onchange=()=>{if(input.checked)setUiScale(input.value);};
+  });
 }
 
 function setSearchEngine(id){
@@ -1751,7 +1830,12 @@ function setUiScale(value){
   saveUiScale();
   applyUiScale();
   const current = $("uiScaleCurrent");
-  if(current) current.textContent = `${state.uiScale}%`;
+  if(current) current.textContent = currentUiScaleOption().label;
+  document.querySelectorAll('input[name="uiScale"]').forEach(input=>{
+    const active = Number(input.value) === state.uiScale;
+    input.checked = active;
+    input.closest(".settingsScaleOption")?.classList.toggle("active", active);
+  });
 }
 
 function parseNoteDateMs(note){
@@ -1825,6 +1909,34 @@ function trainerNotePayload(note){
     createdAt:note.createdAt || null,
     body:note.body
   };
+}
+
+function trainerLinkCandidates(){
+  return paths.flatMap(path=>{
+    const pathCandidate = {
+      kind:"path",
+      id:path.id,
+      label:path.title,
+      description:path.summary || path.label || ""
+    };
+    const topicCandidates = (path.topics || []).map(topicId=>{
+      const topic = topicDetails[topicId];
+      return topic ? {
+        kind:"topic",
+        id:topicId,
+        label:topic.title,
+        pathId:path.id,
+        pathTitle:path.title,
+        level:topic.level,
+        description:topic.summary || topic.goal || ""
+      } : null;
+    }).filter(Boolean);
+    return [pathCandidate, ...topicCandidates];
+  });
+}
+
+function trainerLinkCandidateByKey(){
+  return Object.fromEntries(trainerLinkCandidates().map(link=>[`${link.kind}:${link.id}`, link]));
 }
 
 function taskProgressForTopic(topicId){
@@ -1919,24 +2031,87 @@ function renderTrainer(){
   rangeInput.value = state.trainerRange;
   $("trainerNotesRangeLabel").textContent = TRAINER_RANGE_LABELS[state.trainerRange];
   $("trainerContextStats").textContent = `${selectedNotes.length} notes / ${currentTopic().title}`;
-  $("trainerResponse").textContent = state.trainerResponse?.text || "Ask a question or generate a trainer note. The trainer keeps your notes separate from app lesson data.";
+  $("trainerResponse").innerHTML = trainerResponseHtml(state.trainerResponse);
   $("trainerAskBtn").disabled = state.trainerBusy;
   $("trainerNoteBtn").disabled = state.trainerBusy;
   $("trainerCancelBtn").disabled = !state.trainerBusy;
   $("trainerSaveResponseBtn").disabled = state.trainerBusy || !state.trainerResponse?.text;
+  document.querySelectorAll("[data-trainer-path]").forEach(link=>{
+    link.onclick=(event)=>{event.preventDefault();setPath(link.dataset.trainerPath);closeDrawer();};
+  });
+  document.querySelectorAll("[data-trainer-topic]").forEach(link=>{
+    link.onclick=(event)=>{event.preventDefault();setTopic(link.dataset.trainerTopic);closeDrawer();};
+  });
 }
 
-async function callTrainerLLM({question, mode, signal}){
-  const userPrompt = compactAIContext(buildTrainerContext(question, mode));
+function stripMarkdown(text){
+  return String(text || "")
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^\s*[-*+]\s+/gm, "")
+    .replace(/^\s*\d+[.)]\s+/gm, "")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/__([^_]+)__/g, "$1")
+    .replace(/_([^_]+)_/g, "$1")
+    .trim();
+}
+
+function trainerParagraphsHtml(text){
+  const clean = stripMarkdown(text);
+  const paragraphs = clean
+    .split(/\n{2,}|\n(?=[A-Z0-9])/)
+    .map(part=>part.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+  const fallback = "Ask a question or generate a trainer note. The trainer keeps your notes separate from app lesson data.";
+  return `<div class="trainerParagraphs">${(paragraphs.length ? paragraphs : [fallback]).map(part=>`<p>${escapeHtml(part)}</p>`).join("")}</div>`;
+}
+
+function trainerLinksHtml(links, loading = false){
+  if(loading) return `<div class="trainerLinkBlock"><div class="trainerLinkTitle">Recommended next</div><div class="muted">Finding the best places to go next...</div></div>`;
+  if(!Array.isArray(links) || !links.length) return "";
+  return `
+    <div class="trainerLinkBlock">
+      <div class="trainerLinkTitle">Recommended next</div>
+      <ul class="trainerLinkList">
+        ${links.map(link=>`
+          <li class="trainerLinkItem">
+            <a href="${escapeHtml(link.href)}" ${link.kind === "topic" ? `data-trainer-topic="${escapeHtml(link.id)}"` : `data-trainer-path="${escapeHtml(link.id)}"`}>
+              <strong>${escapeHtml(link.label)}</strong>
+              <span>${escapeHtml(link.reason)}</span>
+            </a>
+          </li>
+        `).join("")}
+      </ul>
+    </div>
+  `;
+}
+
+function trainerResponseHtml(response){
+  return trainerParagraphsHtml(response?.text || "") + trainerLinksHtml(response?.links, response?.linksLoading);
+}
+
+function trainerResponseContent(data){
+  const content = data?.choices?.[0]?.message?.content;
+  if(typeof content === "string") return content.trim();
+  if(Array.isArray(content)){
+    return content.map(part=>typeof part?.text === "string" ? part.text : "").join("\n").trim();
+  }
+  return "";
+}
+
+async function callTrainerCompletion({systemPrompt, userPrompt, maxTokens, temperature, signal}){
   const response = await fetch(TRAINER_API_URL, {
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
       purpose:"learnai-trainer",
-      systemPrompt:TRAINER_PROMPT,
+      systemPrompt,
       userPrompt,
-      maxTokens:900,
-      temperature:0.35
+      maxTokens,
+      temperature
     }),
     signal
   });
@@ -1944,12 +2119,65 @@ async function callTrainerLLM({question, mode, signal}){
   if(!response.ok){
     throw new Error(data?.error?.message || data?.message || response.statusText || "Trainer API failed");
   }
-  const content = data?.choices?.[0]?.message?.content;
-  if(typeof content === "string") return content.trim();
-  if(Array.isArray(content)){
-    return content.map(part=>typeof part?.text === "string" ? part.text : "").join("\n").trim();
-  }
-  return "";
+  return trainerResponseContent(data);
+}
+
+async function callTrainerLLM({question, mode, signal}){
+  const userPrompt = compactAIContext(buildTrainerContext(question, mode));
+  const text = await callTrainerCompletion({
+    systemPrompt:TRAINER_PROMPT,
+    userPrompt,
+    maxTokens:900,
+    temperature:0.35,
+    signal
+  });
+  return stripMarkdown(text);
+}
+
+function buildTrainerLinkContext({question, mode, answerText}){
+  return {
+    ...buildTrainerContext(question, mode),
+    trainerAnswer:{
+      plainParagraphText:stripMarkdown(answerText)
+    },
+    availableLinks:trainerLinkCandidates()
+  };
+}
+
+function parseTrainerLinks(rawText){
+  const candidates = trainerLinkCandidateByKey();
+  const seen = new Set();
+  return String(rawText || "")
+    .split(/\r?\n/)
+    .map(line=>line.trim())
+    .filter(line=>line.startsWith("LINK|"))
+    .map(line=>{
+      const [, kind, id, label, reason] = line.split("|").map(part=>part.trim());
+      const candidate = candidates[`${kind}:${id}`];
+      if(!candidate || seen.has(`${kind}:${id}`)) return null;
+      seen.add(`${kind}:${id}`);
+      return {
+        kind,
+        id,
+        label:label || candidate.label,
+        reason:reason || candidate.description || "Open this part of the guide.",
+        href:kind === "topic" ? `#topic/${encodeURIComponent(id)}` : `#path/${encodeURIComponent(id)}`
+      };
+    })
+    .filter(Boolean)
+    .slice(0, 4);
+}
+
+async function callTrainerLinkLLM({question, mode, answerText, signal}){
+  const userPrompt = compactAIContext(buildTrainerLinkContext({question, mode, answerText}));
+  const text = await callTrainerCompletion({
+    systemPrompt:TRAINER_LINK_PROMPT,
+    userPrompt,
+    maxTokens:280,
+    temperature:0.2,
+    signal
+  });
+  return parseTrainerLinks(text);
 }
 
 async function runTrainer(mode){
@@ -1969,7 +2197,16 @@ async function runTrainer(mode){
       toast("No trainer response returned.");
       state.trainerResponse = null;
     }else{
-      state.trainerResponse = {text, mode, question, createdAt:now()};
+      state.trainerResponse = {text, links:[], linksLoading:true, mode, question, createdAt:now()};
+      renderTrainer();
+      try{
+        const links = await callTrainerLinkLLM({question, mode, answerText:text, signal:trainerAbortController.signal});
+        state.trainerResponse = {...state.trainerResponse, links, linksLoading:false};
+      }catch(linkError){
+        if(linkError?.name === "AbortError") throw linkError;
+        console.warn("Trainer recommendation links failed", linkError);
+        state.trainerResponse = {...state.trainerResponse, links:[], linksLoading:false};
+      }
       toast("Trainer response ready.");
     }
   }catch(error){
@@ -1997,10 +2234,13 @@ function saveTrainerResponseAsNote(){
     return;
   }
   const prefix = response.mode === "question" && response.question ? `Question: ${response.question}\n\n` : "";
+  const linkText = Array.isArray(response.links) && response.links.length
+    ? `\n\nRecommended next:\n${response.links.map(link=>`${link.label}: ${link.reason}`).join("\n")}`
+    : "";
   state.notes.unshift({
     id:uid(),
     title:`Trainer: ${currentTopic().title}`,
-    body:`${prefix}${response.text}`,
+    body:`${prefix}${stripMarkdown(response.text)}${linkText}`,
     type:"Trainer",
     scope:"topic",
     pathId:state.pathId,
@@ -2011,7 +2251,8 @@ function saveTrainerResponseAsNote(){
       source:TRAINER_NOTE_SOURCE,
       marker:TRAINER_NOTE_MARKER,
       readOnly:true,
-      contentFormat:"markdown"
+      contentFormat:"plain_text",
+      links:response.links || []
     },
     createdAt:now(),
     createdAtMs:Date.now(),
@@ -2044,6 +2285,8 @@ function setPath(pathId){
 }
 
 function setTopic(topicId){
+  const owningPath = paths.find(path=>path.topics?.includes(topicId));
+  if(owningPath) state.pathId = owningPath.id;
   state.topicId = topicId;
   state.editingId = null;
   clearNoteForm();
@@ -2208,6 +2451,20 @@ function openDrawer(tab){
 function closeDrawer(){
   state.drawerTab = null;
   renderDrawer();
+}
+
+function shouldCloseDrawerFromOutsideClick(event){
+  if(!state.drawerTab) return false;
+  if(!window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 821px)").matches) return false;
+  const drawer = $("bottomDrawer");
+  const bottomNav = document.querySelector(".bottomNav");
+  const clickedDrawer = drawer?.contains(event.target);
+  const clickedNav = bottomNav?.contains(event.target);
+  return !clickedDrawer && !clickedNav;
+}
+
+function handleOutsideDrawerClick(event){
+  if(shouldCloseDrawerFromOutsideClick(event)) closeDrawer();
 }
 
 function showNotesList(){
@@ -2508,6 +2765,7 @@ $("trainerNoteBtn").onclick=()=>runTrainer("note");
 $("trainerCancelBtn").onclick=cancelTrainer;
 $("trainerSaveResponseBtn").onclick=saveTrainerResponseAsNote;
 $("settingsNavBtn").onclick=()=>openDrawer("settings");
+document.addEventListener("pointerdown", handleOutsideDrawerClick, true);
 window.addEventListener("resize", updateLayoutMetrics);
 window.addEventListener("resize", updateViewportEnvironment);
 window.addEventListener("orientationchange", updateViewportEnvironment);
