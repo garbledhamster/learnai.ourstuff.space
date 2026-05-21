@@ -41,3 +41,25 @@
     referenceColor: "#66d9ef"
     practiceColor: "#fd971f"
     peopleColor: "#ae81ff"
+
+- id: monokaiLight
+  label: Monokai (Light)
+  colors:
+    primaryColor: "#7fb800"
+    secondaryColor: "#0086a8"
+    backgroundColor: "#f3ecd8"
+    surfaceColor: "#fffaf0"
+    surfaceMutedColor: "#5a513f"
+    borderColor: "#2d2a22"
+    textColor: "#2d2a22"
+    textMutedColor: "#6d6658"
+    dangerColor: "#d7265f"
+    cardColor: "#fffaf0"
+    shadowColor: "#2d2a22"
+    accentTextColor: "#1f2413"
+    bodyBackgroundColor: "#fffaf0"
+    bodySoftColor: "#f0e7ce"
+    bodySofterColor: "#f8f1df"
+    referenceColor: "#4fc3df"
+    practiceColor: "#f0a202"
+    peopleColor: "#b08ce8"
