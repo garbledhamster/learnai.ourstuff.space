@@ -84,7 +84,7 @@
     }
     button,a,input,textarea,select{font:inherit}
     a{color:inherit;text-decoration:none}
-    button,a[role="button"],.hardBtn,.smallBtn,.resourceBtn,.topicBtn,.pathBtn,.termBtn,.tinyBtn,.taskBtn,.bottomNav button,.settingsOption,.socialPill,.linkItem{
+    button,a[role="button"],.hardBtn,.smallBtn,.resourceBtn,.topicBtn,.pathBtn,.termBtn,.certObjectiveBtn,.certTermChip,.tinyBtn,.taskBtn,.bottomNav button,.settingsOption,.socialPill,.linkItem{
       -webkit-user-select:none;
       user-select:none;
       -webkit-tap-highlight-color:transparent;
@@ -330,6 +330,169 @@
       font-size:13px;
     }
     .termBtn:hover{background:var(--accent);color:var(--on-accent)}
+    .certDashboard{
+      display:grid;
+      gap:14px;
+    }
+    .certExamHead{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:12px;
+      align-items:start;
+      border-bottom:3px solid var(--line);
+      padding-bottom:12px;
+    }
+    .certExamTitle{
+      font-family:var(--font-display);
+      font-weight:900;
+      text-transform:uppercase;
+      font-size:20px;
+      line-height:1;
+    }
+    .certExamMeta{
+      font-size:12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:8px;
+    }
+    .certPill,.certPercent{
+      border:2px solid var(--line);
+      background:var(--accent);
+      color:var(--on-accent);
+      padding:4px 7px;
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .certPercent{
+      background:var(--reference);
+      color:var(--on-reference);
+    }
+    .certProgressBadge{
+      justify-self:end;
+      border:3px solid var(--line);
+      background:var(--cream);
+      color:var(--on-cream);
+      padding:8px 10px;
+      text-align:center;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+    .certDomainGrid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+    .certDomainCard{
+      border:3px solid var(--line);
+      background:var(--body-bg);
+      color:var(--on-body-bg);
+      padding:12px;
+      display:grid;
+      gap:9px;
+    }
+    .certDomainTop{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:start;
+    }
+    .certDomainTitle,.certObjectiveTitle,.certTermTitle{
+      font-family:var(--font-display);
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.02em;
+    }
+    .certObjectiveList{
+      display:grid;
+      gap:6px;
+    }
+    .certObjectiveBtn{
+      border:2px solid var(--line);
+      background:var(--card-bg);
+      color:var(--on-card);
+      padding:8px;
+      cursor:pointer;
+      text-align:left;
+      display:grid;
+      grid-template-columns:22px minmax(0,1fr);
+      gap:7px;
+      align-items:start;
+    }
+    .certObjectiveBtn.active{
+      background:var(--line);
+      color:var(--on-line);
+      box-shadow:inset 7px 0 0 var(--accent);
+    }
+    .certObjectiveBtn.done{
+      text-decoration:line-through;
+      text-decoration-thickness:2px;
+      opacity:.72;
+    }
+    .certObjectiveCheck{
+      width:16px;
+      height:16px;
+      border:2px solid var(--line);
+      background:var(--panel);
+      margin-top:1px;
+    }
+    .certObjectiveBtn.done .certObjectiveCheck{background:var(--accent)}
+    .certFocusPanel{
+      border:3px solid var(--line);
+      background:var(--people);
+      color:var(--on-people);
+      padding:12px;
+      display:grid;
+      gap:10px;
+    }
+    .certFocusActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+    .certTermRow,.certResourceRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .certTermChip{
+      border:2px solid var(--line);
+      background:var(--card-bg);
+      color:var(--on-card);
+      padding:7px 9px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+    .certTermChip.active,.certTermChip:hover{
+      background:var(--accent);
+      color:var(--on-accent);
+    }
+    .certResourceLink{
+      border:2px solid var(--line);
+      background:var(--reference);
+      color:var(--on-reference);
+      padding:7px 9px;
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+    .certTermPanel{
+      border:3px solid var(--line);
+      background:var(--card-bg);
+      color:var(--on-card);
+      padding:12px;
+      display:grid;
+      gap:8px;
+    }
+    .certTermDefinition{
+      font-family:var(--font-reading);
+      font-size:16px;
+    }
     .resourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
     .resourceBtn{
       min-height:92px;
@@ -1070,7 +1233,9 @@
       .pathBtn{border-right:0;border-bottom:4px solid var(--line);min-height:auto}
       .pathBtn:last-child{border-bottom:0}
       .right{border-left:0}
-      .twoCol,.resourceGrid,.rightBody,.peopleGrid{grid-template-columns:1fr}
+      .twoCol,.resourceGrid,.rightBody,.peopleGrid,.certDomainGrid{grid-template-columns:1fr}
+      .certExamHead{grid-template-columns:1fr}
+      .certProgressBadge{justify-self:start}
       .bottomNav{width:calc(100% - 16px);max-width:calc(100% - 16px)}
       .bottomNav button{font-size:12px;padding:8px 6px;min-width:0}
       .drawerGrid .pathBtn{
@@ -1162,10 +1327,10 @@
             <h2 id="topicTitle"></h2>
             <div class="muted" id="topicLevel"></div>
             <div class="headActions">
-              <button class="hardBtn primary" id="addTakeawayBtn">+ Definition Note</button>
-              <button class="hardBtn blue" id="addQuestionBtn">+ Confusion Note</button>
-              <button class="hardBtn orange" id="copyPracticeBtn">Copy Practice</button>
-              <button class="hardBtn" id="resetBtn">Reset View</button>
+              <button class="hardBtn primary" id="addTakeawayBtn" type="button">+ Definition Note</button>
+              <button class="hardBtn blue" id="addQuestionBtn" type="button">+ Confusion Note</button>
+              <button class="hardBtn orange" id="copyPracticeBtn" type="button">Copy Practice</button>
+              <button class="hardBtn" id="resetBtn" type="button">Reset View</button>
             </div>
           </div>
 
@@ -1179,6 +1344,8 @@
               <div class="cardTitle">Why This Matters</div>
               <div id="topicWhy"></div>
             </div>
+
+            <div class="card certDashboard hiddenPanel" id="certDashboard"></div>
 
             <div class="twoCol">
               <div class="card">
@@ -1237,19 +1404,19 @@
             <div class="sideCard notesBlock">
               <div class="muted" style="margin-bottom:10px">Search, filter, and open notes. Use New Note or a template to open the editor.</div>
               <div class="noteTools">
-                <button class="smallBtn primary" id="newNoteBtn">New Note</button>
-                <button class="smallBtn blue" id="exportNotesBtn">Export</button>
+                <button class="smallBtn primary" id="newNoteBtn" type="button">New Note</button>
+                <button class="smallBtn blue" id="exportNotesBtn" type="button">Export</button>
                 <label class="smallBtn pink" style="cursor:pointer">
                   Import
                   <input id="importNotesInput" type="file" accept="application/json" class="hidden" />
                 </label>
-                <button class="smallBtn" id="showAllNotesBtn">All Notes</button>
+                <button class="smallBtn" id="showAllNotesBtn" type="button">All Notes</button>
               </div>
               <div class="templateGrid">
-                <button class="smallBtn" data-template="blackbox">Black Box</button>
-                <button class="smallBtn" data-template="firstprinciples">First Principles</button>
-                <button class="smallBtn" data-template="5w2h">5W2H</button>
-                <button class="smallBtn" data-template="miniessay">Mini Essay</button>
+                <button class="smallBtn" data-template="blackbox" type="button">Black Box</button>
+                <button class="smallBtn" data-template="firstprinciples" type="button">First Principles</button>
+                <button class="smallBtn" data-template="5w2h" type="button">5W2H</button>
+                <button class="smallBtn" data-template="miniessay" type="button">Mini Essay</button>
               </div>
               <div class="noteFilters" style="margin-top:10px">
                 <div class="field">
@@ -1317,9 +1484,9 @@
                 <textarea id="noteBody" placeholder="Write the note here..."></textarea>
               </div>
               <div class="editorActions">
-                <button class="smallBtn primary" id="saveNoteBtn">Save Note</button>
-                <button class="smallBtn" id="clearEditorBtn">Clear</button>
-                <button class="smallBtn blue" id="backToNotesBtn2">Back To List</button>
+                <button class="smallBtn primary" id="saveNoteBtn" type="button">Save Note</button>
+                <button class="smallBtn" id="clearEditorBtn" type="button">Clear</button>
+                <button class="smallBtn blue" id="backToNotesBtn2" type="button">Back To List</button>
               </div>
             </div>
           </div>
@@ -1341,12 +1508,12 @@
                 <textarea id="trainerQuestion" maxlength="700" placeholder="Ask where you are, what to study next, or what your notes are missing."></textarea>
               </div>
               <div class="trainerActions">
-                <button class="smallBtn primary" id="trainerAskBtn">Ask Trainer</button>
-                <button class="smallBtn blue" id="trainerNoteBtn">Trainer Note</button>
-                <button class="smallBtn" id="trainerCancelBtn">Cancel</button>
+                <button class="smallBtn primary" id="trainerAskBtn" type="button">Ask Trainer</button>
+                <button class="smallBtn blue" id="trainerNoteBtn" type="button">Trainer Note</button>
+                <button class="smallBtn" id="trainerCancelBtn" type="button">Cancel</button>
               </div>
               <div class="trainerResponse" id="trainerResponse">Ask a question or generate a trainer note. The trainer uses your current path, topic, tasklist, and selected notes.</div>
-              <button class="smallBtn pink" id="trainerSaveResponseBtn">Save Response As Note</button>
+              <button class="smallBtn pink" id="trainerSaveResponseBtn" type="button">Save Response As Note</button>
             </div>
           </div>
         </div>
@@ -1357,7 +1524,7 @@
       </div>
 
       <nav class="bottomNav" aria-label="Learning navigation">
-      <button id="lessonsNavBtn" data-drawer-tab="lessons" aria-label="Lessons">
+      <button id="lessonsNavBtn" data-drawer-tab="lessons" type="button" aria-label="Lessons">
         <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"></path>
           <path d="M4 5.5v16"></path>
@@ -1366,7 +1533,7 @@
         </svg>
         <span>Lessons</span>
       </button>
-      <button id="topicsNavBtn" data-drawer-tab="topics" aria-label="Topics">
+      <button id="topicsNavBtn" data-drawer-tab="topics" type="button" aria-label="Topics">
         <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M5 6h14"></path>
           <path d="M5 12h14"></path>
@@ -1377,7 +1544,7 @@
         </svg>
         <span>Topics</span>
       </button>
-      <button id="notesNavBtn" aria-label="Notes">
+      <button id="notesNavBtn" type="button" aria-label="Notes">
         <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M7 3h8l4 4v14H7z"></path>
           <path d="M15 3v5h5"></path>
@@ -1386,7 +1553,7 @@
         </svg>
         <span>Notes</span>
       </button>
-      <button id="trainerNavBtn" aria-label="Trainer">
+      <button id="trainerNavBtn" type="button" aria-label="Trainer">
         <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 3v4"></path>
           <path d="M12 17v4"></path>
@@ -1398,7 +1565,7 @@
         </svg>
         <span>Trainer</span>
       </button>
-      <button id="settingsNavBtn" aria-label="Settings">
+      <button id="settingsNavBtn" type="button" aria-label="Settings">
         <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z"></path>
           <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.04.04a2 2 0 1 1-2.83 2.83l-.04-.04A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6V20a2 2 0 1 1-4 0v-.06a1.7 1.7 0 0 0-1-.6a1.7 1.7 0 0 0-1.87.34l-.04.04a2 2 0 1 1-2.83-2.83l.04-.04A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1H4a2 2 0 1 1 0-4h.06a1.7 1.7 0 0 0 .6-1a1.7 1.7 0 0 0-.34-1.87l-.04-.04a2 2 0 1 1 2.83-2.83l.04.04A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6V4a2 2 0 1 1 4 0v.06a1.7 1.7 0 0 0 1 .6a1.7 1.7 0 0 0 1.87-.34l.04-.04a2 2 0 1 1 2.83 2.83l-.04.04A1.7 1.7 0 0 0 19.4 9c.22.35.42.68.6 1H20a2 2 0 1 1 0 4h-.06a1.7 1.7 0 0 0-.54 1z"></path>
@@ -1418,6 +1585,8 @@ let paths = [];
 let topicDetails = {};
 let peopleBank = {};
 let bookBank = {};
+let certExams = {};
+let certTerms = {};
 const CONTENT_URL = "content.yaml";
 const THEME_URL = "themes.yaml";
 const THEME_STORAGE_KEY = "aiNavigatorThemePresetV1";
@@ -1579,12 +1748,32 @@ async function loadLearningContent(){
   applyLearningContent(parser(raw));
 }
 
+function normalizeCertExams(rawCertExams){
+  return Object.fromEntries(Object.entries(rawCertExams).map(([id, exam])=>{
+    const resources = Array.isArray(exam.resources) ? exam.resources : [];
+    const resourceMap = Object.fromEntries(resources.map(resource=>[resource.id, resource]));
+    const domains = (exam.domains || []).map(domain=>({
+      ...domain,
+      objectives:(domain.objectives || []).map(objective=>({
+        ...objective,
+        domainId:domain.id,
+        domainLabel:domain.label,
+        examId:id,
+        resourceIds:[...(domain.resourceIds || []), ...(objective.resourceIds || [])].filter(Boolean)
+      }))
+    }));
+    return [id, {...exam, id:exam.id || id, resources, resourceMap, domains}];
+  }));
+}
+
 function applyLearningContent(content){
   if(!content || typeof content !== "object") throw new Error("Content YAML is empty or invalid.");
   official = content.official || {};
   paths = Array.isArray(content.paths) ? content.paths : [];
   peopleBank = content.people || content.peopleBank || {};
   bookBank = content.books || content.bookBank || {};
+  certTerms = content.certTerms || {};
+  certExams = normalizeCertExams(content.certExams || {});
   const rawTopics = content.topics || content.topicDetails || {};
   topicDetails = Object.fromEntries(Object.entries(rawTopics).map(([id, topic])=>{
     const officialRef = topic.official;
@@ -1609,6 +1798,7 @@ function renderContentError(error){
 
 const SEARCH_ENGINE_STORAGE_KEY = "aiNavigatorSearchEngineV1";
 const UI_SCALE_STORAGE_KEY = "aiNavigatorUiScaleV1";
+const CERT_PROGRESS_STORAGE_KEY = "aiNavigatorCertProgressV1";
 const DEFAULT_UI_SCALE = 1;
 const UI_SCALE_OPTIONS = [
   {value:0.5, label:".5x zoom", factor:0.5},
@@ -1666,7 +1856,7 @@ const TRAINER_PROMPT = [
   "Treat userProgress as app state about the user's actions.",
   "Treat appCourseContext and appReferenceContext as built-in curriculum/reference data, not as the user's personal knowledge, opinions, goals, or notes.",
   "Treat generatedTrainerNotes as earlier AI-generated notes, not direct evidence of the user's own understanding unless the user explicitly says so.",
-  "Help the user work through their AI learning notes, current lesson path, tasklist progress, vocabulary, people, and books.",
+  "Help the user work through their AI learning notes, current lesson path, tasklist progress, certification exam objectives, vocabulary, people, and books.",
   "Be practical, direct, and forward-looking.",
   "Use userNotes as the main evidence. Use appCourseContext only to orient the lesson and next steps.",
   "Prefer black box thinking, first principles, 5W2H, and mini essay structure when useful.",
@@ -1676,7 +1866,7 @@ const TRAINER_PROMPT = [
 const TRAINER_LINK_PROMPT = [
   "You choose useful internal app links for the user's next study step.",
   "Return only lines in this exact format: LINK|kind|id|label|reason",
-  "kind must be topic or path.",
+  "kind must be topic, path, cert, domain, or objective.",
   "id must exactly match one availableLinks item.",
   "label must be short, plain text, and must not contain pipes.",
   "reason must be a short plain text reason and must not contain pipes.",
@@ -1684,12 +1874,15 @@ const TRAINER_LINK_PROMPT = [
   "Do not use markdown, JSON, prose, headings, bullets, or extra text."
 ].join(" ");
 
-let state = {
+const state = {
   pathId:"beginner",
   topicId:"what-is-ai",
   notes: loadNotes(),
   editingId:null,
   taskDone: loadTaskDone(),
+  certProgress: loadCertProgress(),
+  certObjectiveId:null,
+  certTermId:null,
   drawerTab:null,
   notesView:"list",
   themeId: loadThemeId(),
@@ -1753,10 +1946,43 @@ function normalizeTrainerRange(value){
 }
 function currentPath(){return paths.find(p=>p.id===state.pathId)}
 function currentTopic(){return topicDetails[state.topicId]}
+function currentCertExam(){return certExams[currentTopic()?.certExam] || null}
+function certObjectives(exam){
+  return (exam?.domains || []).flatMap(domain=>domain.objectives || []);
+}
+function selectedCertObjective(exam = currentCertExam()){
+  const objectives = certObjectives(exam);
+  if(!objectives.length) return null;
+  if(!objectives.some(objective=>objective.id === state.certObjectiveId)){
+    state.certObjectiveId = objectives[0].id;
+  }
+  return objectives.find(objective=>objective.id === state.certObjectiveId) || objectives[0];
+}
+function selectedCertDomain(exam = currentCertExam()){
+  const objective = selectedCertObjective(exam);
+  return exam?.domains?.find(domain=>domain.id === objective?.domainId) || exam?.domains?.[0] || null;
+}
+function certProgressSet(examId){
+  return new Set(state.certProgress[examId] || []);
+}
+function isCertObjectiveDone(examId, objectiveId){
+  return certProgressSet(examId).has(objectiveId);
+}
+function currentCertProgress(exam = currentCertExam()){
+  const objectives = certObjectives(exam);
+  const done = certProgressSet(exam?.id);
+  return {
+    done: objectives.filter(objective=>done.has(objective.id)),
+    remaining: objectives.filter(objective=>!done.has(objective.id)),
+    total: objectives.length
+  };
+}
 function saveNotes(){localStorage.setItem("aiNavigatorNotesV2", JSON.stringify(state.notes))}
 function loadNotes(){try{return JSON.parse(localStorage.getItem("aiNavigatorNotesV2")||"[]")}catch{return []}}
 function saveTaskDone(){localStorage.setItem("aiNavigatorTaskDoneV1", JSON.stringify(state.taskDone))}
 function loadTaskDone(){try{return JSON.parse(localStorage.getItem("aiNavigatorTaskDoneV1")||"{}")}catch{return {}}}
+function saveCertProgress(){try{localStorage.setItem(CERT_PROGRESS_STORAGE_KEY, JSON.stringify(state.certProgress))}catch{}}
+function loadCertProgress(){try{return JSON.parse(localStorage.getItem(CERT_PROGRESS_STORAGE_KEY)||"{}")}catch{return {}}}
 function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2200)}
 function escapeHtml(str){return String(str||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 
@@ -1764,6 +1990,7 @@ function render(){
   renderPaths();
   renderTopics();
   renderMain();
+  renderCertDashboard();
   renderResources();
   renderNotes();
   renderSideLists();
@@ -1835,6 +2062,156 @@ function renderMain(){
     };
   });
   $("practiceBox").textContent = t.practice;
+}
+
+function certTermLabel(termId){
+  return certTerms[termId]?.term || termId.split("-").map(part=>part.charAt(0).toUpperCase()+part.slice(1)).join(" ");
+}
+
+function normalizeTermKey(value){
+  return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+function certTermIdFromText(value){
+  const direct = normalizeTermKey(value);
+  if(certTerms[direct]) return direct;
+  return Object.keys(certTerms).find(id=>normalizeTermKey(certTerms[id]?.term) === direct) || null;
+}
+
+function certTermDefinition(termId){
+  return certTerms[termId] || {
+    term:certTermLabel(termId),
+    definition:"No local definition is available yet.",
+    examContext:"Use the search link to confirm this term against official sources.",
+    sourceUrl:generalSearch(`${certTermLabel(termId)} AI certification definition`)
+  };
+}
+
+function resourceByIds(exam, resourceIds = []){
+  const seen = new Set();
+  const resources = [];
+  for(const id of resourceIds){
+    const resource = exam?.resourceMap?.[id];
+    if(resource && !seen.has(resource.id)){
+      seen.add(resource.id);
+      resources.push(resource);
+    }
+  }
+  if(!resources.length && exam?.officialUrl){
+    resources.push({id:"official", label:"Official Source", url:exam.officialUrl, kind:"official"});
+  }
+  return resources;
+}
+
+function renderCertDashboard(){
+  const el = $("certDashboard");
+  if(!el) return;
+  const exam = currentCertExam();
+  if(!exam){
+    el.classList.add("hiddenPanel");
+    el.innerHTML = "";
+    return;
+  }
+  const objective = selectedCertObjective(exam);
+  const domain = selectedCertDomain(exam);
+  const progress = currentCertProgress(exam);
+  const doneCount = progress.done.length;
+  const selectedTermId = state.certTermId || objective?.termIds?.[0] || domain?.termIds?.[0] || "";
+  state.certTermId = selectedTermId;
+  const selectedTerm = selectedTermId ? certTermDefinition(selectedTermId) : null;
+  const objectiveDone = objective ? isCertObjectiveDone(exam.id, objective.id) : false;
+  const focusResources = resourceByIds(exam, [...(domain?.resourceIds || []), ...(objective?.resourceIds || [])]);
+  el.classList.remove("hiddenPanel");
+  el.innerHTML = `
+    <div class="certExamHead">
+      <div>
+        <div class="cardTitle">Exam Dashboard</div>
+        <div class="certExamTitle">${escapeHtml(exam.title)}</div>
+        <div class="certExamMeta">
+          <span class="certPill">${escapeHtml(exam.provider)}</span>
+          <span class="certPill">${escapeHtml(exam.examCode)}</span>
+          <span class="certPill">Reviewed ${escapeHtml(exam.lastReviewed)}</span>
+        </div>
+        <div class="muted" style="margin-top:8px">${escapeHtml(exam.summary)}</div>
+      </div>
+      <div class="certProgressBadge">${doneCount}/${progress.total}<br>done</div>
+    </div>
+    <div class="certDomainGrid">
+      ${(exam.domains || []).map(domain=>`
+        <section class="certDomainCard">
+          <div class="certDomainTop">
+            <div>
+              <div class="certDomainTitle">${escapeHtml(domain.label)}</div>
+              <div class="muted">${escapeHtml(domain.summary)}</div>
+            </div>
+            <span class="certPercent">${escapeHtml(domain.weightPercent)}%</span>
+          </div>
+          <div class="certObjectiveList">
+            ${(domain.objectives || []).map(item=>{
+              const done = isCertObjectiveDone(exam.id, item.id);
+              return `<button class="certObjectiveBtn ${item.id===objective?.id?'active':''} ${done?'done':''}" data-cert-objective="${escapeHtml(item.id)}" aria-pressed="${done}">
+                <span class="certObjectiveCheck"></span>
+                <span>${escapeHtml(item.label)}</span>
+              </button>`;
+            }).join("")}
+          </div>
+        </section>
+      `).join("")}
+    </div>
+    ${objective ? `
+      <section class="certFocusPanel">
+        <div>
+          <div class="cardTitle">${escapeHtml(domain?.label || "Objective")}</div>
+          <div class="certObjectiveTitle">${escapeHtml(objective.label)}</div>
+          <div>${escapeHtml(objective.summary)}</div>
+        </div>
+        <div class="certFocusActions">
+          <button class="smallBtn primary" data-cert-toggle-objective="${escapeHtml(objective.id)}">${objectiveDone ? "Mark Open" : "Mark Done"}</button>
+          <button class="smallBtn" data-cert-note-objective="${escapeHtml(objective.id)}">Objective Note</button>
+          <a class="smallBtn blue" href="${escapeHtml(exam.officialUrl)}" target="_blank" rel="noreferrer">Official Page</a>
+        </div>
+        <div>
+          <div class="cardTitle">Terms</div>
+          <div class="certTermRow">${(objective.termIds || domain?.termIds || []).map(termId=>`
+            <button class="certTermChip ${termId===selectedTermId?'active':''}" data-cert-term="${escapeHtml(termId)}">${escapeHtml(certTermLabel(termId))}</button>
+          `).join("")}</div>
+        </div>
+        <div>
+          <div class="cardTitle">Resources</div>
+          <div class="certResourceRow">${focusResources.map(resource=>`
+            <a class="certResourceLink" href="${escapeHtml(resource.url)}" target="_blank" rel="noreferrer">${escapeHtml(resource.label)}</a>
+          `).join("")}</div>
+        </div>
+        ${selectedTerm ? `
+          <div class="certTermPanel">
+            <div class="certTermTitle">${escapeHtml(selectedTerm.term)}</div>
+            <div class="certTermDefinition">${escapeHtml(selectedTerm.definition)}</div>
+            <div><b>Exam context:</b> ${escapeHtml(selectedTerm.examContext)}</div>
+            <div class="certResourceRow">
+              <button class="smallBtn primary" data-cert-note-term="${escapeHtml(selectedTermId)}">Save Term Note</button>
+              <a class="smallBtn blue" href="${escapeHtml(selectedTerm.sourceUrl || generalSearch(`${selectedTerm.term} AI certification definition`))}" target="_blank" rel="noreferrer">Source</a>
+              <a class="smallBtn" href="${escapeHtml(generalSearch(`${selectedTerm.term} ${exam.title} exam objective`))}" target="_blank" rel="noreferrer">Search</a>
+            </div>
+          </div>
+        ` : ""}
+      </section>
+    ` : ""}
+  `;
+  el.querySelectorAll("[data-cert-objective]").forEach(btn=>{
+    btn.onclick=()=>setCertObjective(btn.dataset.certObjective);
+  });
+  el.querySelectorAll("[data-cert-toggle-objective]").forEach(btn=>{
+    btn.onclick=()=>toggleCertObjective(btn.dataset.certToggleObjective);
+  });
+  el.querySelectorAll("[data-cert-note-objective]").forEach(btn=>{
+    btn.onclick=()=>startCertObjectiveNote(btn.dataset.certNoteObjective);
+  });
+  el.querySelectorAll("[data-cert-term]").forEach(btn=>{
+    btn.onclick=()=>setCertTerm(btn.dataset.certTerm);
+  });
+  el.querySelectorAll("[data-cert-note-term]").forEach(btn=>{
+    btn.onclick=()=>startCertTermNote(btn.dataset.certNoteTerm);
+  });
 }
 
 function resourceCards(){
@@ -2064,7 +2441,7 @@ function trainerNotePayload(note){
 }
 
 function trainerLinkCandidates(){
-  return paths.flatMap(path=>{
+  const pathAndTopicLinks = paths.flatMap(path=>{
     const pathCandidate = {
       kind:"path",
       id:path.id,
@@ -2085,6 +2462,36 @@ function trainerLinkCandidates(){
     }).filter(Boolean);
     return [pathCandidate, ...topicCandidates];
   });
+  const certLinks = Object.values(certExams).flatMap(exam=>{
+    const certLink = {
+      kind:"cert",
+      id:exam.id,
+      label:exam.title,
+      topicId:exam.topicId,
+      description:exam.summary || exam.examCode || ""
+    };
+    const domainLinks = (exam.domains || []).map(domain=>({
+      kind:"domain",
+      id:`${exam.id}/${domain.id}`,
+      label:domain.label,
+      examId:exam.id,
+      domainId:domain.id,
+      topicId:exam.topicId,
+      description:domain.summary || ""
+    }));
+    const objectiveLinks = certObjectives(exam).map(objective=>({
+      kind:"objective",
+      id:objective.id,
+      label:objective.label,
+      examId:exam.id,
+      domainId:objective.domainId,
+      objectiveId:objective.id,
+      topicId:exam.topicId,
+      description:objective.summary || ""
+    }));
+    return [certLink, ...domainLinks, ...objectiveLinks];
+  });
+  return [...pathAndTopicLinks, ...certLinks];
 }
 
 function trainerLinkCandidateByKey(){
@@ -2097,6 +2504,57 @@ function taskProgressForTopic(topicId){
   return {
     done: t.steps.filter((_,i)=>done.has(i)),
     remaining: t.steps.filter((_,i)=>!done.has(i))
+  };
+}
+
+function certTrainerContext(){
+  const exam = currentCertExam();
+  if(!exam) return null;
+  const objective = selectedCertObjective(exam);
+  const domain = selectedCertDomain(exam);
+  const progress = currentCertProgress(exam);
+  const termIds = Array.from(new Set([
+    ...(domain?.termIds || []),
+    ...(objective?.termIds || [])
+  ]));
+  return {
+    currentCert:{
+      id:exam.id,
+      title:exam.title,
+      provider:exam.provider,
+      examCode:exam.examCode,
+      officialUrl:exam.officialUrl,
+      blueprintUrl:exam.blueprintUrl,
+      lastReviewed:exam.lastReviewed,
+      summary:exam.summary
+    },
+    selectedDomain: domain ? {
+      id:domain.id,
+      label:domain.label,
+      weightPercent:domain.weightPercent,
+      summary:domain.summary
+    } : null,
+    selectedObjective: objective ? {
+      id:objective.id,
+      label:objective.label,
+      summary:objective.summary,
+      done:isCertObjectiveDone(exam.id, objective.id)
+    } : null,
+    objectiveProgress:{
+      done:progress.done.map(item=>item.label),
+      remaining:progress.remaining.map(item=>item.label)
+    },
+    relatedTerms:termIds.map(termId=>({
+      id:termId,
+      term:certTermLabel(termId),
+      definition:certTerms[termId]?.definition || "",
+      examContext:certTerms[termId]?.examContext || ""
+    })),
+    resources:resourceByIds(exam, [...(domain?.resourceIds || []), ...(objective?.resourceIds || [])]).map(resource=>({
+      label:resource.label,
+      url:resource.url,
+      kind:resource.kind || ""
+    }))
   };
 }
 
@@ -2138,6 +2596,7 @@ function buildTrainerContext(question = "", mode = "question"){
       userProgress:"App state from user task checkoffs. This is user activity data, not written note content.",
       generatedTrainerNotes:"Prior AI trainer responses saved as notes. Use only as conversation continuity, not as direct proof of user understanding.",
       appCourseContext:"Built-in lesson/path/topic data from the app. Use as curriculum context, not personal user data.",
+      appCertificationContext:"Built-in certification outline, objective, progress, term, and source data from the app.",
       appReferenceContext:"Built-in app reference suggestions. Use as optional study material, not personal user data."
     },
     userInput:{
@@ -2168,6 +2627,7 @@ function buildTrainerContext(question = "", mode = "question"){
         practice:t.practice
       }
     },
+    appCertificationContext:certTrainerContext(),
     appReferenceContext:{
       peopleToLookAt: people.map(person=>({name:person.name, why:person.why, creates:person.creates})),
       booksToRead: books.map(book=>({title:book.title, author:book.author, level:book.level}))
@@ -2182,7 +2642,8 @@ function renderTrainer(){
   rangeInput.max = TRAINER_ALL_RANGE;
   rangeInput.value = state.trainerRange;
   $("trainerNotesRangeLabel").textContent = TRAINER_RANGE_LABELS[state.trainerRange];
-  $("trainerContextStats").textContent = `${selectedNotes.length} notes / ${currentTopic().title}`;
+  const exam = currentCertExam();
+  $("trainerContextStats").textContent = exam ? `${selectedNotes.length} notes / ${exam.title}` : `${selectedNotes.length} notes / ${currentTopic().title}`;
   $("trainerResponse").innerHTML = trainerResponseHtml(state.trainerResponse);
   $("trainerAskBtn").disabled = state.trainerBusy;
   $("trainerNoteBtn").disabled = state.trainerBusy;
@@ -2193,6 +2654,9 @@ function renderTrainer(){
   });
   document.querySelectorAll("[data-trainer-topic]").forEach(link=>{
     link.onclick=(event)=>{event.preventDefault();setTopic(link.dataset.trainerTopic);closeDrawer();};
+  });
+  document.querySelectorAll("[data-trainer-link-kind]").forEach(link=>{
+    link.onclick=(event)=>{event.preventDefault();openTrainerLink(link.dataset.trainerLinkKind, link.dataset.trainerLinkId);closeDrawer();};
   });
 }
 
@@ -2230,7 +2694,7 @@ function trainerLinksHtml(links, loading = false){
       <ul class="trainerLinkList">
         ${links.map(link=>`
           <li class="trainerLinkItem">
-            <a href="${escapeHtml(link.href)}" ${link.kind === "topic" ? `data-trainer-topic="${escapeHtml(link.id)}"` : `data-trainer-path="${escapeHtml(link.id)}"`}>
+            <a href="${escapeHtml(link.href)}" data-trainer-link-kind="${escapeHtml(link.kind)}" data-trainer-link-id="${escapeHtml(link.id)}">
               <strong>${escapeHtml(link.label)}</strong>
               <span>${escapeHtml(link.reason)}</span>
             </a>
@@ -2313,11 +2777,41 @@ function parseTrainerLinks(rawText){
         id,
         label:label || candidate.label,
         reason:reason || candidate.description || "Open this part of the guide.",
-        href:kind === "topic" ? `#topic/${encodeURIComponent(id)}` : `#path/${encodeURIComponent(id)}`
+        href:trainerLinkHref(candidate)
       };
     })
     .filter(Boolean)
     .slice(0, 4);
+}
+
+function trainerLinkHref(candidate){
+  if(candidate.kind === "topic") return `#topic/${encodeURIComponent(candidate.id)}`;
+  if(candidate.kind === "path") return `#path/${encodeURIComponent(candidate.id)}`;
+  if(candidate.kind === "cert") return `#cert/${encodeURIComponent(candidate.id)}`;
+  if(candidate.kind === "domain") return `#domain/${encodeURIComponent(candidate.id)}`;
+  if(candidate.kind === "objective") return `#objective/${encodeURIComponent(candidate.id)}`;
+  return "#";
+}
+
+function openTrainerLink(kind, id){
+  const candidate = trainerLinkCandidateByKey()[`${kind}:${id}`];
+  if(!candidate) return;
+  if(kind === "path") return setPath(candidate.id);
+  if(kind === "topic") return setTopic(candidate.id);
+  if(candidate.topicId) setTopic(candidate.topicId);
+  if(kind === "domain"){
+    const exam = certExams[candidate.examId];
+    const domain = exam?.domains?.find(item=>item.id === candidate.domainId);
+    state.certObjectiveId = domain?.objectives?.[0]?.id || null;
+    state.certTermId = domain?.termIds?.[0] || null;
+  }
+  if(kind === "objective"){
+    state.certObjectiveId = candidate.objectiveId;
+    const exam = certExams[candidate.examId];
+    const objective = certObjectives(exam).find(item=>item.id === candidate.objectiveId);
+    state.certTermId = objective?.termIds?.[0] || null;
+  }
+  render();
 }
 
 async function callTrainerLinkLLM({question, mode, answerText, signal}){
@@ -2428,9 +2922,50 @@ function toggleTaskDone(index){
   renderMain();
 }
 
+function setCertObjective(objectiveId){
+  state.certObjectiveId = objectiveId;
+  const exam = currentCertExam();
+  const objective = selectedCertObjective(exam);
+  state.certTermId = objective?.termIds?.[0] || selectedCertDomain(exam)?.termIds?.[0] || null;
+  renderCertDashboard();
+  renderTrainer();
+}
+
+function setCertTerm(termId){
+  state.certTermId = termId;
+  renderCertDashboard();
+}
+
+function toggleCertObjective(objectiveId){
+  const exam = currentCertExam();
+  if(!exam || !objectiveId) return;
+  const done = certProgressSet(exam.id);
+  if(done.has(objectiveId)) done.delete(objectiveId); else done.add(objectiveId);
+  state.certProgress[exam.id] = [...done];
+  saveCertProgress();
+  renderCertDashboard();
+  renderTrainer();
+}
+
+function startCertObjectiveNote(objectiveId){
+  const exam = currentCertExam();
+  const objective = certObjectives(exam).find(item=>item.id === objectiveId);
+  const domain = exam?.domains?.find(item=>item.id === objective?.domainId);
+  if(!exam || !objective) return;
+  prefillNote("Cert Term", `${objective.label} review`, `Certification:\n${exam.title} (${exam.examCode})\n\nDomain:\n${domain?.label || ""}\n\nObjective:\n${objective.label}\n\nPlain-English summary:\n${objective.summary}\n\nTerms to define:\n${(objective.termIds || []).map(certTermLabel).join(", ")}\n\nWhat I know:\n\nWhat I need to review:\n\nSource:\n${exam.blueprintUrl || exam.officialUrl}`);
+}
+
+function startCertTermNote(termId){
+  const term = certTermDefinition(termId);
+  const exam = currentCertExam();
+  prefillNote("Cert Term", `${term.term} cert term`, `Term:\n${term.term}\n\nDefinition:\n${term.definition}\n\nExam context:\n${term.examContext}\n\nCurrent certification:\n${exam?.title || currentTopic().title}\n\nExample:\n\nSource:\n${term.sourceUrl || ""}`);
+}
+
 function setPath(pathId){
   state.pathId = pathId;
   state.topicId = currentPath().topics[0];
+  state.certObjectiveId = null;
+  state.certTermId = null;
   state.editingId = null;
   clearNoteForm();
   render();
@@ -2440,6 +2975,8 @@ function setTopic(topicId){
   const owningPath = paths.find(path=>path.topics?.includes(topicId));
   if(owningPath) state.pathId = owningPath.id;
   state.topicId = topicId;
+  state.certObjectiveId = null;
+  state.certTermId = null;
   state.editingId = null;
   clearNoteForm();
   render();
@@ -2509,6 +3046,13 @@ async function loadTermDefinition(term, btn){
   btn.textContent = "Loading...";
   btn.disabled = true;
   try{
+    const localTermId = certTermIdFromText(term);
+    if(localTermId){
+      const localTerm = certTermDefinition(localTermId);
+      prefillNote("Cert Term", `${localTerm.term} definition`, `AI-focused definition of ${localTerm.term}:\n\n${localTerm.definition}\n\nExam context:\n${localTerm.examContext}\n\nSource:\n${localTerm.sourceUrl || ""}\n\nWhere it appears in ${currentTopic().title}:\n\nExample:`);
+      toast("Local cert term loaded.");
+      return;
+    }
     const result = await fetchAiDefinition(term);
     const body = result
       ? `AI-focused definition of ${term}:\n\n${result.definition}\n\nSource: ${result.source}\n${result.url}\n\nWhere it appears in ${currentTopic().title}:\n\nExample:`
@@ -2576,8 +3120,12 @@ function renderDrawer(){
       <span class="topicText"><span class="topicTitleText">${escapeHtml(t.title)}</span><span class="topicMeta">${escapeHtml(t.level)}</span></span>
     </button>`;
   }).join("")}</div>`;
-  document.querySelectorAll("[data-drawer-path]").forEach(btn=>btn.onclick=()=>{setPath(btn.dataset.drawerPath);openDrawer("topics");});
-  document.querySelectorAll("[data-drawer-topic]").forEach(btn=>btn.onclick=()=>{setTopic(btn.dataset.drawerTopic);closeDrawer();});
+  document.querySelectorAll("[data-drawer-path]").forEach(btn=>{
+    btn.onclick=()=>{setPath(btn.dataset.drawerPath);openDrawer("topics");};
+  });
+  document.querySelectorAll("[data-drawer-topic]").forEach(btn=>{
+    btn.onclick=()=>{setTopic(btn.dataset.drawerTopic);closeDrawer();};
+  });
   $("drawerLessons").classList.toggle("hiddenPanel", state.drawerTab !== "lessons");
   $("drawerTopics").classList.toggle("hiddenPanel", state.drawerTab !== "topics");
   $("drawerNotes").classList.toggle("hiddenPanel", state.drawerTab !== "notes");
@@ -2875,7 +3423,9 @@ function renderNotes(){
           <button class="tinyBtn" data-new-note="true">New Note</button>
         </div>
       </div>`;
-    document.querySelectorAll("[data-new-note]").forEach(b=>b.onclick=()=>{clearNoteForm();showNoteEditor();});
+    document.querySelectorAll("[data-new-note]").forEach(b=>{
+      b.onclick=()=>{clearNoteForm();showNoteEditor();};
+    });
     return;
   }
   $("noteList").innerHTML = notes.map(n=>`
@@ -2896,10 +3446,18 @@ function renderNotes(){
       </div>
     </div>
   `).join("");
-  document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editNote(b.dataset.edit));
-  document.querySelectorAll("[data-pin]").forEach(b=>b.onclick=()=>toggleNote(b.dataset.pin,"pinned"));
-  document.querySelectorAll("[data-archive]").forEach(b=>b.onclick=()=>toggleNote(b.dataset.archive,"archived"));
-  document.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteNote(b.dataset.delete));
+  document.querySelectorAll("[data-edit]").forEach(b=>{
+    b.onclick=()=>editNote(b.dataset.edit);
+  });
+  document.querySelectorAll("[data-pin]").forEach(b=>{
+    b.onclick=()=>toggleNote(b.dataset.pin,"pinned");
+  });
+  document.querySelectorAll("[data-archive]").forEach(b=>{
+    b.onclick=()=>toggleNote(b.dataset.archive,"archived");
+  });
+  document.querySelectorAll("[data-delete]").forEach(b=>{
+    b.onclick=()=>deleteNote(b.dataset.delete);
+  });
 }
 
 function scopeLabel(n){
@@ -2990,7 +3548,7 @@ $("importNotesInput").onchange=(e)=>{if(e.target.files[0]) importNotes(e.target.
 $("filterScope").onchange=renderNotes;
 $("filterType").onchange=renderNotes;
 $("showAllNotesBtn").onclick=()=>{$("filterScope").value="all";$("filterType").value="all";renderNotes();};
-$("resetBtn").onclick=()=>{state.pathId="beginner";state.topicId="what-is-ai";state.drawerTab=null;clearNoteForm();render();};
+$("resetBtn").onclick=()=>{state.pathId="beginner";state.topicId="what-is-ai";state.certObjectiveId=null;state.certTermId=null;state.drawerTab=null;clearNoteForm();render();};
 $("addTakeawayBtn").onclick=()=>prefillNote("Definition", `${currentTopic().title} definition`, `Plain-English definition:\n\nWhy it matters:\n\nExample:\n\nRelated terms: ${currentTopic().terms.join(", ")}`);
 $("addQuestionBtn").onclick=()=>prefillNote("Confusion", `${currentTopic().title} confusion`, `What I do not understand yet:\n\nWhat I searched:\n\nWhat answer would clear this up:`);
 $("copyPracticeBtn").onclick=async()=>{
@@ -2998,7 +3556,9 @@ $("copyPracticeBtn").onclick=async()=>{
   try{await navigator.clipboard.writeText(text);toast("Practice copied.");}
   catch{prefillNote("Practice", `${currentTopic().title} practice`, text);toast("Clipboard blocked; practice note started.")}
 };
-document.querySelectorAll("[data-template]").forEach(btn=>btn.onclick=()=>startTemplate(btn.dataset.template));
+document.querySelectorAll("[data-template]").forEach(btn=>{
+  btn.onclick=()=>startTemplate(btn.dataset.template);
+});
 $("lessonsNavBtn").onclick=()=>openDrawer("lessons");
 $("topicsNavBtn").onclick=()=>openDrawer("topics");
 $("notesNavBtn").onclick=()=>{

@@ -21,6 +21,31 @@ Track durable project context for future agent work in this repo. Keep this file
 
 ## Change Log
 
+### 2026-05-26
+
+Goal: Add a certification exam tracker dashboard to the Certs path.
+
+Decisions:
+- Keep cert blueprint data curated in `content.yaml`.
+- Add `certExams` and `certTerms` as the v1 data model.
+- Render the dashboard only for Certs topics with `certExam`.
+- Persist objective progress in `aiNavigatorCertProgressV1`.
+
+Files changed:
+- `content.yaml`
+- `index.html`
+- `CLAUDE.md`
+
+Verification:
+- YAML parsed with vendored `js-yaml`; 7 cert topics resolve to 7 cert dashboards, with no missing term/resource IDs.
+- Browser smoke test at `http://127.0.0.1:5188/index.html` showed all Certs dashboards, objective progress persistence, local term panel, mobile no-overflow check, and trainer cert context label.
+
+Risks:
+- Official exam blueprints can change; refresh `lastReviewed` and source links before major content updates.
+
+Next action:
+- Recheck the dashboard after any cert data update.
+
 ### 2026-05-23
 
 Goal: Add a SecAI+ certification section to the existing Certs path.

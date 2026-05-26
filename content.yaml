@@ -650,6 +650,7 @@ topics:
     query: "AI agents explained tool calling workflow beginner"
   aws-ai-practitioner:
     title: "AWS AI Practitioner"
+    certExam: "aws-ai-practitioner"
     level: "Certification / foundational"
     summary: "AWS AI Practitioner validates foundational AI, ML, and generative AI knowledge for people familiar with AI/ML but not necessarily building solutions."
     why: "This is a useful cert-aware path for general AI literacy in AWS-heavy environments."
@@ -674,6 +675,7 @@ topics:
     query: "AWS Certified AI Practitioner study guide beginner"
   azure-ai-fundamentals:
     title: "Azure AI Fundamentals"
+    certExam: "azure-ai-fundamentals"
     level: "Certification / foundational"
     summary: "Azure AI Fundamentals is Microsoft’s entry AI credential covering AI workloads, ML principles, computer vision, NLP, and generative AI in the Azure context."
     why: "This matters in Microsoft-heavy workplaces where Azure and Microsoft AI services are already part of the environment."
@@ -698,6 +700,7 @@ topics:
     query: "Microsoft Azure AI Fundamentals AI-900 AI-901 study guide"
   comptia-secai-plus:
     title: "CompTIA SecAI+"
+    certExam: "comptia-secai-plus"
     level: "Certification / AI security"
     summary: "CompTIA SecAI+ is a vendor-neutral certification for securing AI systems, using AI responsibly in cybersecurity operations, and handling AI governance, risk, and compliance."
     why: "This is the security-focused AI certification path for people who already understand IT or cybersecurity and want to specialize in AI-enabled environments."
@@ -722,6 +725,7 @@ topics:
     query: "CompTIA SecAI+ CY0-001 study guide AI security"
   responsible-ai:
     title: "Responsible AI"
+    certExam: "responsible-ai-review"
     level: "Certification / governance"
     summary: "Responsible AI covers fairness, reliability, privacy, transparency, accountability, and safe use of AI systems."
     why: "Responsible AI appears across certifications, workplace use, IT governance, and public debates."
@@ -746,6 +750,7 @@ topics:
     query: "responsible AI explained beginner NIST"
   foundation-models:
     title: "Foundation Models"
+    certExam: "foundation-models-review"
     level: "Certification / foundation"
     summary: "Foundation models are large models trained broadly enough that they can be adapted to many downstream tasks."
     why: "This term appears constantly in generative AI, cloud AI, and certification material."
@@ -770,6 +775,7 @@ topics:
     query: "foundation models explained beginner"
   cloud-ai-services:
     title: "Cloud AI Services"
+    certExam: "cloud-ai-services-review"
     level: "Certification / cloud"
     summary: "Cloud AI services are hosted tools from providers like AWS, Microsoft, and Google that expose AI capabilities through dashboards, APIs, and managed services."
     why: "Certifications often test not just concepts, but how those concepts appear inside a provider ecosystem."
@@ -794,6 +800,7 @@ topics:
     query: "cloud AI services AWS Azure Google beginner"
   exam-terms:
     title: "Exam Terms"
+    certExam: "exam-terms-review"
     level: "Certification / review"
     summary: "Exam terms are the repeated vocabulary that shows up across AI certifications: model, training, inference, fairness, responsible AI, prompt, token, and governance."
     why: "Vocabulary is one of the quickest ways to make AI certification material less intimidating."
@@ -816,6 +823,737 @@ topics:
       - "Add one example"
       - "Review weak terms"
     query: "AI fundamentals certification glossary terms"
+certExams:
+  aws-ai-practitioner:
+    id: "aws-ai-practitioner"
+    title: "AWS Certified AI Practitioner"
+    provider: "AWS"
+    examCode: "AIF-C01"
+    officialUrl: "https://aws.amazon.com/certification/certified-ai-practitioner/"
+    blueprintUrl: "https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html"
+    lastReviewed: "2026-05-26"
+    topicId: "aws-ai-practitioner"
+    summary: "A foundational AWS certification for AI, ML, generative AI, responsible AI, and AWS AI service selection."
+    resources:
+      - id: "aws-cert-page"
+        label: "Certification Page"
+        url: "https://aws.amazon.com/certification/certified-ai-practitioner/"
+        kind: "official"
+      - id: "aws-exam-guide"
+        label: "Exam Guide"
+        url: "https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html"
+        kind: "official"
+      - id: "aws-skill-builder"
+        label: "AWS Skill Builder"
+        url: "https://skillbuilder.aws/"
+        kind: "study"
+    domains:
+      - id: "aws-ai-ml-fundamentals"
+        label: "Fundamentals of AI and ML"
+        weightPercent: 20
+        summary: "Know core AI, ML, model, inference, evaluation, and lifecycle vocabulary."
+        objectives:
+          - id: "aws-aif-1-1"
+            label: "Explain basic AI and ML concepts"
+            summary: "Separate AI, ML, deep learning, supervised learning, unsupervised learning, training, inference, and prediction."
+            termIds: ["artificial-intelligence", "machine-learning", "training", "inference", "model-evaluation"]
+          - id: "aws-aif-1-2"
+            label: "Identify practical AI use cases"
+            summary: "Match common AI and ML approaches to business scenarios without overpromising model capability."
+            termIds: ["prediction", "classification", "computer-vision", "natural-language-processing"]
+        termIds: ["artificial-intelligence", "machine-learning", "training", "inference", "prediction"]
+        resourceIds: ["aws-exam-guide", "aws-skill-builder"]
+      - id: "aws-genai-fundamentals"
+        label: "Fundamentals of Generative AI"
+        weightPercent: 24
+        summary: "Understand foundation models, prompts, tokens, context, embeddings, and generative AI outputs."
+        objectives:
+          - id: "aws-aif-2-1"
+            label: "Explain generative AI concepts"
+            summary: "Define foundation models, LLMs, prompts, tokens, embeddings, multimodal models, and hallucinations."
+            termIds: ["generative-ai", "foundation-model", "large-language-model", "token", "embedding", "hallucination"]
+          - id: "aws-aif-2-2"
+            label: "Choose generative AI techniques"
+            summary: "Recognize when prompt engineering, RAG, fine-tuning, or evaluation is the right improvement path."
+            termIds: ["prompt-engineering", "retrieval-augmented-generation", "fine-tuning", "model-evaluation"]
+        termIds: ["generative-ai", "foundation-model", "prompt-engineering", "retrieval-augmented-generation"]
+        resourceIds: ["aws-exam-guide", "aws-skill-builder"]
+      - id: "aws-foundation-models"
+        label: "Applications of Foundation Models"
+        weightPercent: 28
+        summary: "Use foundation models in AWS-centered workflows, including model selection, customization, and application patterns."
+        objectives:
+          - id: "aws-aif-3-1"
+            label: "Select foundation model application patterns"
+            summary: "Map model capabilities to chat, summarization, classification, extraction, search, image, and code tasks."
+            termIds: ["foundation-model", "prompt-engineering", "embedding", "retrieval-augmented-generation"]
+          - id: "aws-aif-3-2"
+            label: "Recognize model customization paths"
+            summary: "Know when to use prompt templates, retrieval, fine-tuning, guardrails, and model evaluation."
+            termIds: ["fine-tuning", "guardrails", "model-evaluation", "responsible-ai"]
+        termIds: ["foundation-model", "embedding", "fine-tuning", "guardrails"]
+        resourceIds: ["aws-exam-guide", "aws-skill-builder"]
+      - id: "aws-responsible-ai"
+        label: "Guidelines for Responsible AI"
+        weightPercent: 14
+        summary: "Recognize fairness, privacy, safety, transparency, governance, and human review concerns."
+        objectives:
+          - id: "aws-aif-4-1"
+            label: "Apply responsible AI principles"
+            summary: "Identify bias, fairness, privacy, transparency, explainability, safety, and accountability controls."
+            termIds: ["responsible-ai", "fairness", "privacy", "transparency", "accountability"]
+        termIds: ["responsible-ai", "fairness", "privacy", "transparency"]
+        resourceIds: ["aws-exam-guide"]
+      - id: "aws-security-compliance"
+        label: "Security, Compliance, and Governance"
+        weightPercent: 14
+        summary: "Understand AI security, governance, data protection, monitoring, and compliance expectations in AWS environments."
+        objectives:
+          - id: "aws-aif-5-1"
+            label: "Identify security and governance needs"
+            summary: "Recognize data protection, access control, logging, monitoring, compliance, and AI governance concerns."
+            termIds: ["governance", "access-control", "logging", "data-protection", "compliance"]
+        termIds: ["governance", "access-control", "logging", "compliance"]
+        resourceIds: ["aws-exam-guide"]
+  azure-ai-fundamentals:
+    id: "azure-ai-fundamentals"
+    title: "Microsoft Azure AI Fundamentals"
+    provider: "Microsoft"
+    examCode: "AI-900"
+    officialUrl: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/"
+    blueprintUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+    lastReviewed: "2026-05-26"
+    topicId: "azure-ai-fundamentals"
+    summary: "A Microsoft fundamentals certification for AI workloads, machine learning principles, computer vision, NLP, document intelligence, knowledge mining, and generative AI on Azure. AI-900 is scheduled to retire on 2026-06-30 and AI-901 replaces it."
+    resources:
+      - id: "ms-cert-page"
+        label: "Certification Page"
+        url: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/"
+        kind: "official"
+      - id: "ms-ai900-guide"
+        label: "AI-900 Study Guide"
+        url: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+        kind: "official"
+      - id: "ms-ai901-guide"
+        label: "AI-901 Study Guide"
+        url: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-901"
+        kind: "official"
+    domains:
+      - id: "azure-ai-workloads"
+        label: "Describe AI Workloads and Considerations"
+        weightPercent: "15-20"
+        summary: "Recognize common AI workloads and responsible AI principles."
+        objectives:
+          - id: "az-ai900-1-1"
+            label: "Identify AI workloads"
+            summary: "Recognize prediction, anomaly detection, computer vision, NLP, document processing, knowledge mining, and generative AI scenarios."
+            termIds: ["prediction", "anomaly-detection", "computer-vision", "natural-language-processing", "generative-ai"]
+          - id: "az-ai900-1-2"
+            label: "Recognize responsible AI principles"
+            summary: "Connect fairness, reliability, privacy, inclusiveness, transparency, and accountability to exam scenarios."
+            termIds: ["responsible-ai", "fairness", "privacy", "transparency", "accountability"]
+        termIds: ["responsible-ai", "computer-vision", "natural-language-processing", "generative-ai"]
+        resourceIds: ["ms-ai900-guide", "ms-ai901-guide"]
+      - id: "azure-ml-principles"
+        label: "Describe Fundamental Machine Learning Principles"
+        weightPercent: "15-20"
+        summary: "Understand data, features, labels, model training, evaluation, and Azure Machine Learning concepts."
+        objectives:
+          - id: "az-ai900-2-1"
+            label: "Describe core ML concepts"
+            summary: "Explain features, labels, training, validation, regression, classification, clustering, and model evaluation."
+            termIds: ["machine-learning", "training", "classification", "regression", "clustering", "model-evaluation"]
+        termIds: ["machine-learning", "training", "classification", "regression"]
+        resourceIds: ["ms-ai900-guide"]
+      - id: "azure-vision"
+        label: "Describe Computer Vision Workloads"
+        weightPercent: "15-20"
+        summary: "Recognize image analysis, object detection, OCR, face detection, and Azure AI Vision use cases."
+        objectives:
+          - id: "az-ai900-3-1"
+            label: "Identify vision workloads"
+            summary: "Map image analysis, object detection, OCR, and facial analysis to the right computer vision scenarios."
+            termIds: ["computer-vision", "object-detection", "optical-character-recognition"]
+        termIds: ["computer-vision", "object-detection", "optical-character-recognition"]
+        resourceIds: ["ms-ai900-guide"]
+      - id: "azure-nlp"
+        label: "Describe Natural Language Processing Workloads"
+        weightPercent: "15-20"
+        summary: "Understand language understanding, sentiment, key phrase extraction, translation, speech, and conversational AI."
+        objectives:
+          - id: "az-ai900-4-1"
+            label: "Identify NLP workloads"
+            summary: "Recognize text analytics, translation, speech, conversational AI, and language understanding scenarios."
+            termIds: ["natural-language-processing", "sentiment-analysis", "translation", "speech", "conversational-ai"]
+        termIds: ["natural-language-processing", "sentiment-analysis", "translation", "conversational-ai"]
+        resourceIds: ["ms-ai900-guide"]
+      - id: "azure-generative-ai"
+        label: "Describe Generative AI Workloads"
+        weightPercent: "20-25"
+        summary: "Understand Azure OpenAI, generative AI app patterns, prompt engineering, and responsible generative AI."
+        objectives:
+          - id: "az-ai900-5-1"
+            label: "Explain generative AI workloads"
+            summary: "Describe LLMs, prompts, completions, foundation models, copilot patterns, and responsible use."
+            termIds: ["generative-ai", "large-language-model", "prompt-engineering", "foundation-model", "responsible-ai"]
+        termIds: ["generative-ai", "large-language-model", "prompt-engineering", "responsible-ai"]
+        resourceIds: ["ms-ai900-guide", "ms-ai901-guide"]
+  comptia-secai-plus:
+    id: "comptia-secai-plus"
+    title: "CompTIA SecAI+"
+    provider: "CompTIA"
+    examCode: "CY0-001"
+    officialUrl: "https://www.comptia.org/en-us/certifications/secai/"
+    blueprintUrl: "https://www.comptia.org/en-us/certifications/secai/"
+    lastReviewed: "2026-05-26"
+    topicId: "comptia-secai-plus"
+    summary: "A cybersecurity-focused AI certification covering AI and ML foundations, securing AI systems, AI-assisted security operations, and AI governance, risk, and compliance."
+    resources:
+      - id: "comptia-cert-page"
+        label: "Certification Page"
+        url: "https://www.comptia.org/en-us/certifications/secai/"
+        kind: "official"
+      - id: "comptia-objectives"
+        label: "Exam Objectives"
+        url: "https://www.comptia.org/en-us/certifications/secai/"
+        kind: "official"
+      - id: "owasp-llm"
+        label: "OWASP LLM Top 10"
+        url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+        kind: "reference"
+      - id: "mitre-atlas"
+        label: "MITRE ATLAS"
+        url: "https://atlas.mitre.org/"
+        kind: "reference"
+    domains:
+      - id: "secai-ai-foundations"
+        label: "AI and ML Fundamentals"
+        weightPercent: 17
+        summary: "Know core AI, ML, data, model, LLM, and generative AI concepts from a security perspective."
+        objectives:
+          - id: "secai-1-1"
+            label: "Explain AI and ML concepts"
+            summary: "Define model training, inference, data, foundation models, LLMs, prompts, embeddings, and evaluation."
+            termIds: ["artificial-intelligence", "machine-learning", "training", "inference", "foundation-model", "large-language-model"]
+        termIds: ["artificial-intelligence", "machine-learning", "foundation-model", "large-language-model"]
+        resourceIds: ["comptia-objectives"]
+      - id: "secai-securing-ai"
+        label: "Securing AI Systems"
+        weightPercent: 40
+        summary: "The largest SecAI+ domain: protect data, models, prompts, pipelines, deployments, identities, and AI app boundaries."
+        objectives:
+          - id: "secai-2-1"
+            label: "Protect AI systems and data"
+            summary: "Recognize controls for data protection, access control, logging, monitoring, secrets, model supply chain, and secure deployment."
+            termIds: ["data-protection", "access-control", "logging", "model-supply-chain", "secure-deployment"]
+          - id: "secai-2-2"
+            label: "Identify AI-specific attacks"
+            summary: "Understand prompt injection, data poisoning, model evasion, model extraction, and adversarial examples."
+            termIds: ["prompt-injection", "data-poisoning", "adversarial-attack", "model-evasion", "model-extraction"]
+        termIds: ["prompt-injection", "data-poisoning", "adversarial-attack", "access-control"]
+        resourceIds: ["comptia-objectives", "owasp-llm", "mitre-atlas"]
+      - id: "secai-security-operations"
+        label: "Security Operations with AI"
+        weightPercent: 24
+        summary: "Use AI responsibly in security operations, detection, response, analysis, automation, and SOC workflows."
+        objectives:
+          - id: "secai-3-1"
+            label: "Apply AI to security operations"
+            summary: "Recognize AI-assisted alert triage, detection engineering, phishing analysis, threat intelligence, and response automation."
+            termIds: ["security-operations", "threat-intelligence", "automation", "human-review", "model-evaluation"]
+        termIds: ["security-operations", "threat-intelligence", "automation", "human-review"]
+        resourceIds: ["comptia-objectives", "mitre-atlas"]
+      - id: "secai-grc"
+        label: "Governance, Risk, and Compliance"
+        weightPercent: 19
+        summary: "Manage policy, risk, audit, compliance, responsible AI, privacy, and accountability for AI-enabled environments."
+        objectives:
+          - id: "secai-4-1"
+            label: "Apply AI governance and risk controls"
+            summary: "Identify responsible AI, audit, accountability, compliance, privacy, and risk management controls."
+            termIds: ["governance", "risk-management", "compliance", "responsible-ai", "privacy", "accountability"]
+        termIds: ["governance", "risk-management", "compliance", "responsible-ai"]
+        resourceIds: ["comptia-objectives"]
+  responsible-ai-review:
+    id: "responsible-ai-review"
+    title: "Responsible AI Review Track"
+    provider: "Cross-cert"
+    examCode: "Review"
+    officialUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+    blueprintUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+    lastReviewed: "2026-05-26"
+    topicId: "responsible-ai"
+    summary: "A cross-cert review track for governance, fairness, privacy, transparency, accountability, and risk language."
+    resources:
+      - id: "nist-rmf"
+        label: "NIST AI RMF"
+        url: "https://www.nist.gov/itl/ai-risk-management-framework"
+        kind: "official"
+    domains:
+      - id: "rai-principles"
+        label: "Core Principles"
+        weightPercent: 50
+        summary: "Define the responsible AI principles that recur across foundational and security exams."
+        objectives:
+          - id: "rai-1-1"
+            label: "Define responsible AI principles"
+            summary: "Explain fairness, privacy, transparency, accountability, reliability, and human review in plain English."
+            termIds: ["responsible-ai", "fairness", "privacy", "transparency", "accountability", "human-review"]
+        termIds: ["responsible-ai", "fairness", "privacy", "transparency"]
+        resourceIds: ["nist-rmf"]
+      - id: "rai-controls"
+        label: "Controls and Evidence"
+        weightPercent: 50
+        summary: "Turn principles into review, documentation, testing, access, and monitoring controls."
+        objectives:
+          - id: "rai-2-1"
+            label: "Connect principles to controls"
+            summary: "Map responsible AI risks to documented controls, evaluation, approvals, monitoring, and audit evidence."
+            termIds: ["governance", "risk-management", "model-evaluation", "logging", "compliance"]
+        termIds: ["governance", "risk-management", "model-evaluation", "logging"]
+        resourceIds: ["nist-rmf"]
+  foundation-models-review:
+    id: "foundation-models-review"
+    title: "Foundation Models Review Track"
+    provider: "Cross-cert"
+    examCode: "Review"
+    officialUrl: "https://developers.google.com/machine-learning/resources/intro-llms"
+    blueprintUrl: "https://developers.google.com/machine-learning/resources/intro-llms"
+    lastReviewed: "2026-05-26"
+    topicId: "foundation-models"
+    summary: "A cross-cert review track for foundation models, LLMs, embeddings, prompts, fine-tuning, RAG, and evaluation."
+    resources:
+      - id: "google-llm"
+        label: "Google Intro to LLMs"
+        url: "https://developers.google.com/machine-learning/resources/intro-llms"
+        kind: "official"
+    domains:
+      - id: "fm-concepts"
+        label: "Concepts"
+        weightPercent: 60
+        summary: "Know the vocabulary that makes foundation model exam questions readable."
+        objectives:
+          - id: "fm-1-1"
+            label: "Explain model concepts"
+            summary: "Define foundation model, LLM, token, prompt, context, embedding, and hallucination."
+            termIds: ["foundation-model", "large-language-model", "token", "prompt-engineering", "embedding", "hallucination"]
+        termIds: ["foundation-model", "large-language-model", "token", "embedding"]
+        resourceIds: ["google-llm"]
+      - id: "fm-application"
+        label: "Application Patterns"
+        weightPercent: 40
+        summary: "Recognize prompt engineering, RAG, fine-tuning, guardrails, and evaluation as different improvement levers."
+        objectives:
+          - id: "fm-2-1"
+            label: "Choose improvement techniques"
+            summary: "Separate when to use better prompts, retrieval, fine-tuning, guardrails, or evaluation."
+            termIds: ["prompt-engineering", "retrieval-augmented-generation", "fine-tuning", "guardrails", "model-evaluation"]
+        termIds: ["prompt-engineering", "retrieval-augmented-generation", "fine-tuning", "guardrails"]
+        resourceIds: ["google-llm"]
+  cloud-ai-services-review:
+    id: "cloud-ai-services-review"
+    title: "Cloud AI Services Review Track"
+    provider: "Cross-cert"
+    examCode: "Review"
+    officialUrl: "https://aws.amazon.com/certification/certified-ai-practitioner/"
+    blueprintUrl: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/"
+    lastReviewed: "2026-05-26"
+    topicId: "cloud-ai-services"
+    summary: "A cross-cert review track for recognizing managed AI services, APIs, model platforms, governance services, and provider fit."
+    resources:
+      - id: "aws-ai"
+        label: "AWS AI Practitioner"
+        url: "https://aws.amazon.com/certification/certified-ai-practitioner/"
+        kind: "official"
+      - id: "azure-ai"
+        label: "Azure AI Fundamentals"
+        url: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/"
+        kind: "official"
+    domains:
+      - id: "cloud-service-selection"
+        label: "Service Selection"
+        weightPercent: 55
+        summary: "Match managed services, APIs, and model platforms to common AI workloads."
+        objectives:
+          - id: "cloud-1-1"
+            label: "Choose service categories"
+            summary: "Recognize when a scenario needs managed AI, model hosting, document processing, vision, language, search, or governance services."
+            termIds: ["managed-service", "api", "computer-vision", "natural-language-processing", "governance"]
+        termIds: ["managed-service", "api", "computer-vision", "natural-language-processing"]
+        resourceIds: ["aws-ai", "azure-ai"]
+      - id: "cloud-operating-model"
+        label: "Operating Model"
+        weightPercent: 45
+        summary: "Understand data, access, logging, privacy, cost, deployment, and governance tradeoffs in cloud AI."
+        objectives:
+          - id: "cloud-2-1"
+            label: "Identify operational tradeoffs"
+            summary: "Connect cloud AI choices to data protection, access control, logging, monitoring, cost, and compliance."
+            termIds: ["data-protection", "access-control", "logging", "compliance", "governance"]
+        termIds: ["data-protection", "access-control", "logging", "compliance"]
+        resourceIds: ["aws-ai", "azure-ai"]
+  exam-terms-review:
+    id: "exam-terms-review"
+    title: "Exam Terms Review Track"
+    provider: "Cross-cert"
+    examCode: "Review"
+    officialUrl: "https://developers.google.com/machine-learning/glossary"
+    blueprintUrl: "https://developers.google.com/machine-learning/glossary"
+    lastReviewed: "2026-05-26"
+    topicId: "exam-terms"
+    summary: "A vocabulary-first review track for terms that show up repeatedly across AI certifications."
+    resources:
+      - id: "google-glossary"
+        label: "Google ML Glossary"
+        url: "https://developers.google.com/machine-learning/glossary"
+        kind: "official"
+    domains:
+      - id: "terms-foundation"
+        label: "Foundation Vocabulary"
+        weightPercent: 40
+        summary: "Terms that make foundational AI and ML questions understandable."
+        objectives:
+          - id: "terms-1-1"
+            label: "Define foundation terms"
+            summary: "Define AI, ML, model, training, inference, prediction, and evaluation."
+            termIds: ["artificial-intelligence", "machine-learning", "training", "inference", "prediction", "model-evaluation"]
+        termIds: ["artificial-intelligence", "machine-learning", "training", "inference"]
+        resourceIds: ["google-glossary"]
+      - id: "terms-genai"
+        label: "Generative AI Vocabulary"
+        weightPercent: 35
+        summary: "Terms that make generative AI and foundation model questions understandable."
+        objectives:
+          - id: "terms-2-1"
+            label: "Define generative terms"
+            summary: "Define foundation model, LLM, token, prompt, embedding, RAG, fine-tuning, and hallucination."
+            termIds: ["foundation-model", "large-language-model", "token", "prompt-engineering", "embedding", "retrieval-augmented-generation", "fine-tuning", "hallucination"]
+        termIds: ["foundation-model", "large-language-model", "token", "prompt-engineering"]
+        resourceIds: ["google-glossary"]
+      - id: "terms-governance"
+        label: "Governance and Security Vocabulary"
+        weightPercent: 25
+        summary: "Terms that make responsible AI, cloud AI, and SecAI+ questions easier to parse."
+        objectives:
+          - id: "terms-3-1"
+            label: "Define governance and security terms"
+            summary: "Define responsible AI, governance, compliance, prompt injection, data poisoning, and human review."
+            termIds: ["responsible-ai", "governance", "compliance", "prompt-injection", "data-poisoning", "human-review"]
+        termIds: ["responsible-ai", "governance", "compliance", "prompt-injection"]
+        resourceIds: ["google-glossary"]
+certTerms:
+  access-control:
+    term: "Access Control"
+    definition: "Rules and mechanisms that decide who or what can use a system, dataset, model, API, or function."
+    examContext: "Shows up in AI governance, cloud AI, and SecAI+ questions about protecting model and data access."
+    relatedTopics: ["identity-access", "data-privacy", "logging-audit"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  accountability:
+    term: "Accountability"
+    definition: "Clear ownership for AI decisions, risks, approvals, monitoring, and corrective action."
+    examContext: "A responsible AI principle that appears across cloud and governance-focused certification questions."
+    relatedTopics: ["responsible-ai", "ai-governance"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  adversarial-attack:
+    term: "Adversarial Attack"
+    definition: "An attempt to manipulate an AI system with inputs, data, prompts, or model behavior that cause unsafe or incorrect output."
+    examContext: "Core SecAI+ vocabulary for AI-specific threat scenarios."
+    relatedTopics: ["comptia-secai-plus", "agents"]
+    sourceUrl: "https://atlas.mitre.org/"
+  anomaly-detection:
+    term: "Anomaly Detection"
+    definition: "Finding patterns or events that differ from expected behavior."
+    examContext: "Common AI workload language in Azure and security operations questions."
+    relatedTopics: ["azure-ai-fundamentals", "logging-audit"]
+    sourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+  api:
+    term: "API"
+    definition: "A software interface that lets applications call a service or capability in a predictable way."
+    examContext: "Cloud AI services are often exposed through APIs, dashboards, and SDKs."
+    relatedTopics: ["apis", "cloud-ai-services"]
+    sourceUrl: "https://platform.openai.com/docs"
+  artificial-intelligence:
+    term: "Artificial Intelligence"
+    definition: "Software capability that performs tasks involving prediction, pattern recognition, language, perception, planning, or judgment."
+    examContext: "The umbrella concept that exam questions separate from ML, generative AI, and normal automation."
+    relatedTopics: ["what-is-ai"]
+    sourceUrl: "https://developers.google.com/machine-learning/crash-course"
+  automation:
+    term: "Automation"
+    definition: "Using software to perform repeatable tasks, usually with known rules or workflows."
+    examContext: "Often contrasted with AI, which handles fuzzier pattern, language, or prediction tasks."
+    relatedTopics: ["automation-vs-ai"]
+    sourceUrl: "https://developers.google.com/machine-learning/crash-course"
+  classification:
+    term: "Classification"
+    definition: "A machine learning task that predicts which category or class an input belongs to."
+    examContext: "Common in foundational ML and Azure AI-900 questions."
+    relatedTopics: ["machine-learning"]
+    sourceUrl: "https://developers.google.com/machine-learning/glossary"
+  clustering:
+    term: "Clustering"
+    definition: "Grouping similar examples together without predefined labels."
+    examContext: "Useful for recognizing unsupervised learning scenarios."
+    relatedTopics: ["machine-learning"]
+    sourceUrl: "https://developers.google.com/machine-learning/glossary"
+  compliance:
+    term: "Compliance"
+    definition: "Meeting required laws, regulations, policies, or standards."
+    examContext: "Appears in SecAI+, responsible AI, and cloud governance questions."
+    relatedTopics: ["ai-governance", "data-privacy"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  computer-vision:
+    term: "Computer Vision"
+    definition: "AI techniques for analyzing images or video, such as object detection, OCR, and image classification."
+    examContext: "One of the major Azure AI Fundamentals workload categories."
+    relatedTopics: ["azure-ai-fundamentals"]
+    sourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+  conversational-ai:
+    term: "Conversational AI"
+    definition: "AI systems that interact through natural-language dialogue, such as chatbots or assistants."
+    examContext: "Appears in Azure NLP and generative AI workload questions."
+    relatedTopics: ["llms", "prompting"]
+    sourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+  data-poisoning:
+    term: "Data Poisoning"
+    definition: "An attack that corrupts training, tuning, or retrieval data so an AI system learns or retrieves harmful patterns."
+    examContext: "A SecAI+ attack term tied to AI system and data protection."
+    relatedTopics: ["comptia-secai-plus", "data-privacy"]
+    sourceUrl: "https://atlas.mitre.org/"
+  data-protection:
+    term: "Data Protection"
+    definition: "Controls that keep data private, accurate, available, and only usable by authorized people or systems."
+    examContext: "Shows up in all cloud AI and AI security exam paths."
+    relatedTopics: ["data-privacy", "identity-access"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  embedding:
+    term: "Embedding"
+    definition: "A numeric representation of text, images, or other data that helps software compare meaning or similarity."
+    examContext: "Key vocabulary for semantic search, RAG, and foundation model application patterns."
+    relatedTopics: ["embeddings", "vector-databases", "rag"]
+    sourceUrl: "https://developers.google.com/machine-learning/crash-course"
+  fairness:
+    term: "Fairness"
+    definition: "The goal of reducing unjust or harmful differences in how an AI system affects people or groups."
+    examContext: "Responsible AI questions often ask how to recognize bias and fairness risk."
+    relatedTopics: ["responsible-ai"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  fine-tuning:
+    term: "Fine-tuning"
+    definition: "Further training a model on targeted data so it adapts to a narrower task, style, or domain."
+    examContext: "Often compared with prompt engineering and RAG as a model improvement technique."
+    relatedTopics: ["foundation-models", "llms"]
+    sourceUrl: "https://developers.google.com/machine-learning/resources/intro-llms"
+  foundation-model:
+    term: "Foundation Model"
+    definition: "A large model trained broadly enough that it can be adapted to many different tasks."
+    examContext: "Central vocabulary for AWS AI Practitioner, Azure generative AI, and SecAI+ foundations."
+    relatedTopics: ["foundation-models", "llms"]
+    sourceUrl: "https://developers.google.com/machine-learning/resources/intro-llms"
+  generative-ai:
+    term: "Generative AI"
+    definition: "AI that creates new text, images, code, audio, or other content from learned patterns."
+    examContext: "A major topic in current AI certification outlines."
+    relatedTopics: ["generative-ai", "llms"]
+    sourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+  governance:
+    term: "Governance"
+    definition: "The policies, roles, controls, and review processes used to manage AI use and risk."
+    examContext: "Appears in responsible AI, AWS security/compliance, cloud AI, and SecAI+ GRC questions."
+    relatedTopics: ["ai-governance", "responsible-ai"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  guardrails:
+    term: "Guardrails"
+    definition: "Rules, filters, controls, and review steps intended to keep AI behavior within acceptable boundaries."
+    examContext: "Useful for foundation model and responsible AI questions about safe outputs."
+    relatedTopics: ["responsible-ai", "agents"]
+    sourceUrl: "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+  hallucination:
+    term: "Hallucination"
+    definition: "An AI output that sounds plausible but is false, unsupported, or fabricated."
+    examContext: "Common in generative AI and responsible AI questions about verification."
+    relatedTopics: ["hallucinations", "llms"]
+    sourceUrl: "https://developers.google.com/machine-learning/resources/intro-llms"
+  human-review:
+    term: "Human Review"
+    definition: "A person checks, approves, or corrects AI output before it is trusted or acted on."
+    examContext: "A common control for high-risk AI, security operations, and responsible AI scenarios."
+    relatedTopics: ["responsible-use", "ai-governance"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  inference:
+    term: "Inference"
+    definition: "Using a trained model to produce a prediction, classification, score, or generated output."
+    examContext: "One of the fastest ways to separate model training from model use."
+    relatedTopics: ["machine-learning", "llms"]
+    sourceUrl: "https://developers.google.com/machine-learning/glossary"
+  large-language-model:
+    term: "Large Language Model"
+    definition: "A model trained on large amounts of text that can generate, transform, summarize, and reason over language patterns."
+    examContext: "Core generative AI vocabulary for all current AI certification paths."
+    relatedTopics: ["llms", "foundation-models"]
+    sourceUrl: "https://developers.google.com/machine-learning/resources/intro-llms"
+  logging:
+    term: "Logging"
+    definition: "Recording system activity so actions, errors, access, and decisions can be reviewed later."
+    examContext: "Supports monitoring, audit, compliance, and incident response around AI systems."
+    relatedTopics: ["logging-audit"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  machine-learning:
+    term: "Machine Learning"
+    definition: "A way of building systems that learn patterns from data rather than relying only on hand-written rules."
+    examContext: "The base layer beneath most AI certification vocabulary."
+    relatedTopics: ["machine-learning"]
+    sourceUrl: "https://developers.google.com/machine-learning/crash-course"
+  managed-service:
+    term: "Managed Service"
+    definition: "A cloud service where the provider operates much of the infrastructure and maintenance for you."
+    examContext: "Cloud AI exams often ask when to use a managed AI service instead of building everything yourself."
+    relatedTopics: ["cloud-ai-services"]
+    sourceUrl: "https://aws.amazon.com/certification/certified-ai-practitioner/"
+  model-evaluation:
+    term: "Model Evaluation"
+    definition: "Testing model outputs with metrics, examples, reviews, or benchmarks to see whether the model performs well enough."
+    examContext: "Shows up in ML fundamentals, foundation model selection, and responsible AI controls."
+    relatedTopics: ["machine-learning", "responsible-ai"]
+    sourceUrl: "https://developers.google.com/machine-learning/glossary"
+  model-evasion:
+    term: "Model Evasion"
+    definition: "An attempt to craft inputs that avoid detection or cause a model to make the wrong decision."
+    examContext: "SecAI+ attack vocabulary for adversarial AI scenarios."
+    relatedTopics: ["comptia-secai-plus"]
+    sourceUrl: "https://atlas.mitre.org/"
+  model-extraction:
+    term: "Model Extraction"
+    definition: "An attack that attempts to copy, infer, or reconstruct a model or its behavior through access patterns or queries."
+    examContext: "SecAI+ vocabulary for threats against proprietary models."
+    relatedTopics: ["comptia-secai-plus"]
+    sourceUrl: "https://atlas.mitre.org/"
+  model-supply-chain:
+    term: "Model Supply Chain"
+    definition: "The sources, dependencies, datasets, model files, services, and processes involved in building or deploying an AI model."
+    examContext: "SecAI+ questions can ask how third-party models, datasets, or packages create risk."
+    relatedTopics: ["comptia-secai-plus", "ai-governance"]
+    sourceUrl: "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+  natural-language-processing:
+    term: "Natural Language Processing"
+    definition: "AI techniques for working with human language, including text analysis, translation, speech, and chat."
+    examContext: "A major Azure AI Fundamentals workload category."
+    relatedTopics: ["llms", "azure-ai-fundamentals"]
+    sourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+  object-detection:
+    term: "Object Detection"
+    definition: "A computer vision task that finds and labels objects within an image or video."
+    examContext: "Part of Azure computer vision workload vocabulary."
+    relatedTopics: ["azure-ai-fundamentals"]
+    sourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+  optical-character-recognition:
+    term: "Optical Character Recognition"
+    definition: "Extracting readable text from images, scanned documents, or photos."
+    examContext: "Often appears in Azure vision and document intelligence scenarios."
+    relatedTopics: ["azure-ai-fundamentals"]
+    sourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+  prediction:
+    term: "Prediction"
+    definition: "A model output that estimates a future, unknown, or hidden value from patterns in data."
+    examContext: "A basic ML term often contrasted with generative output."
+    relatedTopics: ["machine-learning"]
+    sourceUrl: "https://developers.google.com/machine-learning/crash-course"
+  privacy:
+    term: "Privacy"
+    definition: "Protecting personal or sensitive information from inappropriate collection, exposure, or use."
+    examContext: "A responsible AI and cloud AI concern in almost every cert path."
+    relatedTopics: ["data-privacy", "responsible-ai"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  prompt-engineering:
+    term: "Prompt Engineering"
+    definition: "Designing instructions, examples, context, and constraints so a generative AI model produces more useful output."
+    examContext: "Compared with RAG and fine-tuning as a practical improvement technique."
+    relatedTopics: ["prompting", "prompting-for-work"]
+    sourceUrl: "https://platform.openai.com/docs"
+  prompt-injection:
+    term: "Prompt Injection"
+    definition: "An attack that uses instructions in user input, documents, or retrieved content to manipulate a model or AI application."
+    examContext: "One of the most important SecAI+ and OWASP LLM security terms."
+    relatedTopics: ["comptia-secai-plus", "rag", "agents"]
+    sourceUrl: "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+  regression:
+    term: "Regression"
+    definition: "A machine learning task that predicts a numeric value."
+    examContext: "Foundational ML vocabulary for Azure and AWS cert questions."
+    relatedTopics: ["machine-learning"]
+    sourceUrl: "https://developers.google.com/machine-learning/glossary"
+  responsible-ai:
+    term: "Responsible AI"
+    definition: "Designing, using, and governing AI with attention to safety, fairness, privacy, transparency, accountability, and human impact."
+    examContext: "A repeated cross-cert concept in AWS, Azure, and SecAI+."
+    relatedTopics: ["responsible-ai", "ai-governance"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  retrieval-augmented-generation:
+    term: "Retrieval-Augmented Generation"
+    definition: "A pattern where an AI system retrieves relevant information and gives it to a model before generating an answer."
+    examContext: "Often tested as an alternative to fine-tuning when answers need source grounding."
+    relatedTopics: ["rag", "embeddings"]
+    sourceUrl: "https://developers.google.com/machine-learning/resources/intro-llms"
+  risk-management:
+    term: "Risk Management"
+    definition: "Identifying, assessing, reducing, and monitoring risks over time."
+    examContext: "Important for responsible AI and SecAI+ GRC questions."
+    relatedTopics: ["ai-governance", "responsible-ai"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+  secure-deployment:
+    term: "Secure Deployment"
+    definition: "Releasing an application or model with appropriate identity, network, data, monitoring, and rollback controls."
+    examContext: "SecAI+ vocabulary for safely operating AI systems."
+    relatedTopics: ["comptia-secai-plus", "logging-audit"]
+    sourceUrl: "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+  security-operations:
+    term: "Security Operations"
+    definition: "The people, processes, and tooling used to monitor, detect, investigate, and respond to security events."
+    examContext: "SecAI+ includes AI-assisted security operations and SOC workflows."
+    relatedTopics: ["comptia-secai-plus"]
+    sourceUrl: "https://atlas.mitre.org/"
+  sentiment-analysis:
+    term: "Sentiment Analysis"
+    definition: "A language task that estimates whether text expresses positive, negative, neutral, or mixed sentiment."
+    examContext: "Azure NLP workload vocabulary."
+    relatedTopics: ["azure-ai-fundamentals", "llms"]
+    sourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+  speech:
+    term: "Speech"
+    definition: "AI workloads that convert speech to text, text to speech, or analyze spoken language."
+    examContext: "Appears in Azure NLP and conversational AI scenarios."
+    relatedTopics: ["azure-ai-fundamentals"]
+    sourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+  threat-intelligence:
+    term: "Threat Intelligence"
+    definition: "Information about threats, attackers, tactics, indicators, and vulnerabilities used to improve security decisions."
+    examContext: "SecAI+ may connect AI to triage, enrichment, and security operations workflows."
+    relatedTopics: ["comptia-secai-plus"]
+    sourceUrl: "https://atlas.mitre.org/"
+  token:
+    term: "Token"
+    definition: "A piece of text, such as a word part or character sequence, that a language model processes."
+    examContext: "Important for understanding LLMs, context windows, prompts, and cost."
+    relatedTopics: ["llms", "foundation-models"]
+    sourceUrl: "https://developers.google.com/machine-learning/resources/intro-llms"
+  training:
+    term: "Training"
+    definition: "The process of adjusting a model using examples so it learns patterns from data."
+    examContext: "A basic concept that exam questions separate from inference and evaluation."
+    relatedTopics: ["machine-learning"]
+    sourceUrl: "https://developers.google.com/machine-learning/crash-course"
+  translation:
+    term: "Translation"
+    definition: "Converting text or speech from one language to another."
+    examContext: "Azure NLP workload vocabulary."
+    relatedTopics: ["azure-ai-fundamentals"]
+    sourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-900"
+  transparency:
+    term: "Transparency"
+    definition: "Making AI behavior, limits, sources, and decisions understandable enough for appropriate review."
+    examContext: "Responsible AI vocabulary for governance, trust, and documentation questions."
+    relatedTopics: ["responsible-ai", "ai-governance"]
+    sourceUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
 people:
   foundations:
     - name: "Andrew Ng"
